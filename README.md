@@ -1,5 +1,5 @@
 # databases
-databases project for school\
+databases project for school
 
 
 This project will connect to a MySQL server running on localhost, with:
