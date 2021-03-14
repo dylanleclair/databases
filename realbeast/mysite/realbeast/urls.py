@@ -3,9 +3,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # ex: /polls/
+    # ex: /realbeast/
     path('', views.index, name='index'),
-    # ex: /polls/5/
+    # ex: /realbeast/5/
     path('<int:question_id>/', views.detail, name='detail'),
     # this code will:
     # match a path with /realbeast/<integer> (ex: localhost:8000/realbeast/1)

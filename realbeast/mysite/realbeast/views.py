@@ -6,7 +6,7 @@ from .models import User
 
 def index(request):
     user_list = User.objects.all()[:5]
-    template = loader.get_template('realbeast/index.html')
+    template = loader.get_template('realbeast/realindex.html')
     context = {
         'user_list':user_list,
     }
