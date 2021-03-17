@@ -63,6 +63,7 @@ https://learndjango.com/tutorials/django-login-and-logout-tutorial
     - colours
     - product types
     - sex
+    - quantitiy (per store)
 - implement Django REST to get us an API
 
 ### old
