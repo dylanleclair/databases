@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     # ex: /realbeast/
     path('', views.index, name='index'),
+    # /realbeast/products/
+    path('products/', views.products, name='products'),
     # ex: /realbeast/5/
     path('<int:question_id>/', views.detail, name='detail'),
     # this code will:

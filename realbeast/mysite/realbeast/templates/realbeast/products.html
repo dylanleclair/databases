@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Stylesheet links -->
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,300&family=Permanent+Marker&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet"> 
+    
+    <!-- Local files-->
+    {% load static %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'realbeast/product_style.css' %}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<div id="container">
+
+
+    <header id="header">
+      
+      <div id="logocontainer"><img id="header-img"src="{% static 'realbeast/icons/sneakers.svg' %}" />
+      <h1 id="title">Realbeast</h1></div>
+    
+    
+    
+    <nav id="nav-bar">
+    <a class="nav-link" href="#product">cart</a>
+    <a class="nav-link" href="#product">account</a>
+      </nav>
+      
+    </header>
+    
+    
+    <main>
+    
+      <h1>Mens Apparel</h1>
+      <!--Add an area to enter filters -->
+      <p id="filters">filters: jersey, medium</p>
+    
+      <section id="product-listings">
+    
+        <!-- add links on each image to the item's page-->
+        
+        <!-- use a similar for-loop to what's in the old templates/realbeast/index.html to generate a grid item for it in the product-container using the format already laid out-->
+
+        {% for product in products %}
+        <div id="product-container">
+          <figure>    
+            <figcaption id="product-title">{{ product.name }}</figcaption>
+            <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" alt="100 thieves jersey"/>
+          </figure>
+
+          <div id="product-desc">
+            <!-- form for sizing-->
+            <p id="price">${{ product.price }}</p>
+            <p id="sizes"></p> <!-- add sizing options-->
+              <div id="cartbutton">
+                <button>Add To Cart</button> 
+              </div>
+           </div>
+        </div>
+        {% endfor %}
+
+    
+      </section>
+    
+    
+      
+    
+    </main>
+    
+    <footer>
+      <p>website by dylan leclair</p>
+    <div id="credit">icons by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+    </footer>
+    
+    </div>
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+</body>
+</html>

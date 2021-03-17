@@ -104,7 +104,8 @@ class Product(models.Model):
     price = models.DecimalField(default=0,max_digits=20, decimal_places=2)
     sex = models.CharField(max_length=1) # only supports 1 letter (m/f)
     name = models.CharField(max_length=200)
-
+    img_name = models.CharField(max_length=200)
+    # add description / details!
 # defining multivalued attributes for products
 
 class Brand(models.Model):
