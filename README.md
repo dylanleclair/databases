@@ -56,16 +56,19 @@ https://learndjango.com/tutorials/django-login-and-logout-tutorial
 https://docs.djangoproject.com/en/3.1/ref/templates/language/
 
 #### Goals for future
-- creating base HTML documents for pages (with navbar) that we can extend to make more pages easier
+- creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
 - stylizing login page (goes hand in hand with the above)
-- creating an account management page (also goes hand in hand with first)
-- adding form functionality to product page so that filters can be applied for:
+    - ready to go, just needs polishing:heavy_check_mark:
+- creating an account management page (also goes hand in hand with first) :arrows_counterclockwise:
+    - drafted :heavy_check_mark:
+    - add ability to update data 
+- adding form functionality to product page so that filters can be applied for: :arrows_counterclockwise:
     - sizes
     - colours
     - product types
-    - sex
-    - quantitiy (per store)
-- implement Django REST to get us an API
+    - sex  
+- add previews of quantity (per store) for each product :heavy_check_mark:
+- implement Django REST to get us an API (due for the 25th) :arrows_counterclockwise:
 
 ### old
 
