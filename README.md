@@ -53,6 +53,7 @@ I'm working on managing sign ins and authentications so that I can start to add 
 The resource I'm following is:
 https://learndjango.com/tutorials/django-login-and-logout-tutorial
 
+https://docs.djangoproject.com/en/3.1/ref/templates/language/
 
 #### Goals for future
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier
@@ -63,6 +64,7 @@ https://learndjango.com/tutorials/django-login-and-logout-tutorial
     - colours
     - product types
     - sex
+    - quantitiy (per store)
 - implement Django REST to get us an API
 
 ### old
