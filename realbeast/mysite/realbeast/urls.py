@@ -7,8 +7,11 @@ urlpatterns = [
     path('', views.index, name='index'),
     # /realbeast/products/
     path('products/', views.products, name='products'),
-    # ex: /realbeast/5/
+    # ex: /realbeast/products/5/
+    path('products/<int:product_id>/', views.product_page, name='product_page'),
+    
     path('<int:question_id>/', views.detail, name='detail'),
+    
     # this code will:
     # match a path with /realbeast/<integer> (ex: localhost:8000/realbeast/1)
     # it will then call the function with the name 'detail' from the module views.detail (see views)

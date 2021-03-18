@@ -1,0 +1,32 @@
+[
+    {
+      "model": "realbeast.Size",
+      "pk": 1,
+      "fields": {
+        "product_id" : "1",
+        "size" : "S",
+        "quantity" : 10,
+        "store_id": "1"
+      }
+    },
+    {
+      "model": "realbeast.Size",
+      "pk": 2,
+      "fields": {
+        "product_id" : "1",
+        "size" : "M",
+        "quantity" : 8,
+        "store_id": "1"
+      }
+    },
+    {
+      "model": "realbeast.Size",
+      "pk": 3,
+      "fields": {
+        "product_id" : "1",
+        "size" : "L",
+        "quantity" : 11,
+        "store_id": "1"
+      }
+    }
+  ]

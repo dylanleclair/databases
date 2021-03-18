@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Stylesheet links -->
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,300&family=Permanent+Marker&display=swap"
+    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+
+<!-- Local files-->
+{% load static %}
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Realbeast{% endblock %}</title>
+</head>
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'realbeast/product_style.css' %}">
+{% block style %}
+
+{% endblock %}
+
+<body>
+
+    <div id="container">
+
+
+        <header id="header">
+            <a href="/">
+            <div id="logocontainer"><img id="header-img" src="{% static 'realbeast/icons/sneakers.svg' %}" />
+                <h1 id="title">Realbeast</h1>
+            </div>
+            </a>
+            <nav id="nav-bar">
+                <a class="nav-link" href="#product">cart</a>
+                {% if user.is_authenticated %}
+                <a class="nav-link" href="#product">my account</a>
+                {% else %}
+                <a class="nav-link" href="#product">login</a>
+                {% endif %}
+            </nav>
+        </header>
+
+
+        <main>
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+        <footer>
+            <p>website by dylan leclair</p>
+            <div id="credit">icons by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a
+                    href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+        </footer>
+
+    </div>
+</body>
+
+</html>

@@ -5,109 +5,116 @@
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital&display=swap" rel="stylesheet">  
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,300&family=Permanent+Marker&display=swap" rel="stylesheet"> 
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet"> 
-    
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,300&family=Permanent+Marker&display=swap"
+  rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
 
-    <!-- Load the stylesheet -->
-    {% load static %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'realbeast/style.css' %}">
+<!-- Load the stylesheet -->
+{% load static %}
 
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <!--[if lt IE 7]>
+<link rel="stylesheet" type="text/css" href="{% static 'realbeast/style.css' %}">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="">
+</head>
+
+<body>
+  <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        
-<div id="container">
 
-  
+  <div id="container">
+
+
     <header id="header">
-      
-    <div id="logocontainer"><img id="header-img" src="{% static 'realbeast/icons/sneakers.svg' %}"/>
-      <h1 id="title">Realbeast</h1>
-    </div>
-    
-    
-    
-    <nav id="nav-bar">
-    <a class="nav-link" href="#product">our brand</a>
-    <a class="nav-link" href="/realbeast/products">store</a>
-    <a class="nav-link" href="#newsletter">sign in</a>
-    </nav>
-    
+
+      <div id="logocontainer"><img id="header-img" src="{% static 'realbeast/icons/sneakers.svg' %}" />
+        <h1 id="title">Realbeast</h1>
+      </div>
+
+
+
+      <nav id="nav-bar">
+        <a class="nav-link" href="#product">our brand</a>
+        <a class="nav-link" href="/realbeast/products">store</a>
+        {% if user.is_authenticated %}
+        <a class="nav-link" href="/accounts/login/">my account</a>
+        {% else %}
+        <a class="nav-link" href="/accounts/login/">sign in</a>
+        {% endif %}
+      </nav>
+
       <div id="nav-track"></div>
-      
+
     </header>
-    
-    
+
+
     <main>
-    
+
       <section id="product">
         <div id="product-sec">
-          <img id="product-img"  src="{% static 'realbeast/icons/popularity.svg' %}" />
+          <img id="product-img" src="{% static 'realbeast/icons/popularity.svg' %}" />
           <div id="product-text">
             <h2>the latest styles</h2>
-            <p>The pieces we sell are ahead of the curve: we sell only the finest and freshest streetwear and apparel.</p>
+            <p>The pieces we sell are ahead of the curve: we sell only the finest and freshest streetwear and apparel.
+            </p>
           </div>
         </div>
-            <div id="product-sec">
-              <img  id="product-img" src="{% static 'realbeast/icons/check.svg' %}" />
+        <div id="product-sec">
+          <img id="product-img" src="{% static 'realbeast/icons/check.svg' %}" />
           <div id="product-text">
             <h2>certified authentic</h2>
-            <p>Every single piece of premium apparel included sold through our store are curated for quality and authenticity before being shipped directly to you, or picked up in store.</p>
+            <p>Every single piece of premium apparel included sold through our store are curated for quality and
+              authenticity before being shipped directly to you, or picked up in store.</p>
           </div>
         </div>
-            <div id="product-sec">
-              <img id="product-img" src="{% static 'realbeast/icons/price-tag.svg' %}" />
+        <div id="product-sec">
+          <img id="product-img" src="{% static 'realbeast/icons/price-tag.svg' %}" />
           <div id="product-text">
             <h2>affordable</h2>
             <p>With Hypebox, you can elevate your fashion without breaking the bank.</p>
           </div>
         </div>
       </section>
-      
+
       <section id="recent">
         <h2>Upcoming items</h2>
         <p>Take a look at some of the products we've recently added to our store:</p>
-      
-        
-    </section>
-      
-      <section id="newsletter">
-    
-        <h2>Sign in</h2>
-        
-    <form id="form" action="https://www.google.com" target="_blank">
-    
-    <label class="form-label" for="email">Enter your email:</label>
-    <input class="form-element" type="email" name="email" id="email" placeholder="youremail@domain.com" required>
-    
-    <input class="form-element" type="submit" id="submit" name="submit" value="Subscribe">
-    </form>
-        
+
+
       </section>
-    
+
+      <section id="newsletter">
+        <form id="form" action="https://www.google.com" target="_blank">
+
+          <label class="form-label" for="email">Enter your email:</label>
+          <input class="form-element" type="email" name="email" id="email" placeholder="youremail@domain.com" required>
+
+          <input class="form-element" type="submit" id="submit" name="submit" value="Subscribe">
+        </form>
+
+      </section>
+
     </main>
-    
+
     <footer>
       <p>website by dylan leclair</p>
-    <div id="credit">icons by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      <div id="credit">icons by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a
+          href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </footer>
-    
-    </div>
-        
 
-    </body>
+  </div>
+
+
+</body>
+
 </html>

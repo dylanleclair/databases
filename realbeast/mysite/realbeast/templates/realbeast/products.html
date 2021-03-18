@@ -1,46 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<!-- Stylesheet links -->
+<!-- Instead of duplicating a bunch of HTML, 
+  we can simply extend other HTML files! -->
+{% extends 'realbeast/base.html' %}
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital&display=swap" rel="stylesheet">  
-    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,300&family=Permanent+Marker&display=swap" rel="stylesheet"> 
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet"> 
-    
-    <!-- Local files-->
-    {% load static %}
+{% block title %}Realbeast - Products{% endblock %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'realbeast/product_style.css' %}">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<div id="container">
+<!-- Local files-->
+{% load static %}
 
 
-    <header id="header">
-      
-      <div id="logocontainer"><img id="header-img"src="{% static 'realbeast/icons/sneakers.svg' %}" />
-      <h1 id="title">Realbeast</h1></div>
-    
-    
-    
-    <nav id="nav-bar">
-    <a class="nav-link" href="#product">cart</a>
-    <a class="nav-link" href="#product">account</a>
-      </nav>
-      
-    </header>
-    
-    
-    <main>
-    
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'realbeast/product_style.css' %}">
+{% endblock %}
+
+{% block content %}
+
       <h1>Mens Apparel</h1>
       <!--Add an area to enter filters -->
       <p id="filters">filters: jersey, medium</p>
@@ -55,8 +29,10 @@
         <div id="product-container">
           <figure>    
             <figcaption id="product-title">{{ product.name }}</figcaption>
-            <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" alt="100 thieves jersey"/>
-          </figure>
+            <a href="/products/{{ product.id}}">
+              <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" alt="100 thieves jersey"/>
+            </a>
+            </figure>
 
           <div id="product-desc">
             <!-- form for sizing-->
@@ -72,19 +48,7 @@
     
       </section>
     
-    
-      
-    
-    </main>
-    
-    <footer>
-      <p>website by dylan leclair</p>
-    <div id="credit">icons by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-    </footer>
-    
-    </div>
-
-<body>
+{% endblock %}
 
 
 
