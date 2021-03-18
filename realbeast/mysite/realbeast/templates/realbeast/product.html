@@ -82,6 +82,19 @@
     border: 1px solid black;
     padding: 0.7rem;
   }
+
+  #out-of-stock {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: Overpass;
+  }
+  #out-of-stock img {
+    width: 2.5rem;
+    margin-right: 0.5rem;
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -134,8 +147,11 @@
 
     </table>
     {% else %}
-    <img src="{% static 'realbeast/icons/warning.svg' %}">
-    <h2>Currently out of stock.</h2>
+    <div id="out-of-stock">
+      <img src="{% static 'realbeast/icons/warning.svg' %}">
+      <h2>Currently out of stock.</h2>
+    </div>
+
     {% endif %}
   </section>
 

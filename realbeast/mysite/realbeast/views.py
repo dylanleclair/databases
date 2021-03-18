@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from .models import User, Product, Store, Size
 from django.template.backends.django import Template
+from django.shortcuts import get_object_or_404, render
 # Create your views here.
 
 def index(request):
@@ -58,3 +59,9 @@ def results(request, question_id):
 
 def vote(request, question_id):
     return HttpResponse("You're voting on question %s." % question_id)
+
+
+def update_user_info(request, user_id):
+    user = get_object_or_404(User,pk=user_id)
+    profile = user.profile
+    return HttpResponseRedirect('/accounts/login')

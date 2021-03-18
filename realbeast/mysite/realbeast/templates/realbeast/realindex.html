@@ -85,25 +85,16 @@
           </div>
         </div>
       </section>
-
-      <section id="recent">
-        <h2>Upcoming items</h2>
-        <p>Take a look at some of the products we've recently added to our store:</p>
-
-
-      </section>
-
+      {% if user.is_authenticated %}
+      {% else %}
       <section id="newsletter">
         <form id="form" action="https://www.google.com" target="_blank">
-
-          <label class="form-label" for="email">Enter your email:</label>
-          <input class="form-element" type="email" name="email" id="email" placeholder="youremail@domain.com" required>
-
-          <input class="form-element" type="submit" id="submit" name="submit" value="Subscribe">
+          <h2>Sign up!</h2>
+          <label class="form-label" for="email">Just one click away.</label>
+          <input class="form-element" type="submit" id="submit" name="submit" value="Sign up">
         </form>
-
       </section>
-
+      {% endif %}
     </main>
 
     <footer>

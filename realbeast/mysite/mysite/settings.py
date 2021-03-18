@@ -128,3 +128,5 @@ STATIC_URL = '/static/'
 
 # Where to redirect user after login
 LOGIN_REDIRECT_URL = '/realbeast/products'
+
+LOGOUT_REDIRECT_URL = '/' # new

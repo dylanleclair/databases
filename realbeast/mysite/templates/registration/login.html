@@ -12,8 +12,35 @@
 <style>
   .uinfo {
     font-family: var(--monospace);
+
   }
-  
+
+  .login-form {
+    font-family: var(--monospace);
+  }
+
+  .title {
+    font-family: Overpass;
+  }
+
+  .form-group {
+    display: grid;
+    grid-template-columns: 100%;
+    row-gap: 0.6rem;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px 0px 20px 0px;
+    text-align: left;
+  }
+
+  #submit {
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    font-family: Overpass;
+    padding: 0.3rem;
+  }
 </style>
 {% endblock %}
 {% if user.is_authenticated %}
@@ -21,15 +48,47 @@
 <!-- Load their information from database -->
 
 
-<div class="uinfo"> 
-  <h2>Hello, {{ user.first_name }} {{ user.last_name}}!</h2>
+<div class="uinfo">
+  <h2>Hey, {{ user.first_name }}!</h2>
 
+  <form class="form-group" action="" method="post">
+    {% csrf_token %}
+
+    <!-- user information inputs here -->
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" maxlength="30" value="{{user.username}}" required>
+
+    <label for="username">First name</label>
+    <input type="text" id="firstname" name="firstname" maxlength="30" value="{{user.first_name}}" required>
+
+    <label for="username">Last name</label>
+    <input type="text" id="lastname" name="lastname" maxlength="30" value="{{user.last_name}}" required>
+
+
+    <label for="email">Email address</label>
+    <input type="text" id="email-id" name="email" maxlength="30" value="{{user.email}}" required>
+
+    <label for="address">Shipping address</label>
+    <input type="text" id="address" name="address" maxlength="30" value="{{user.profile.address}}" required>
+
+
+    <label for="address">Phone</label>
+    <input type="text" id="phone" name="phone" maxlength="10" value="{{user.profile.phone_number}}" required>
+    <input id="submit" type="submit" value="Update">
+
+  </form>
+
+
+<h2>Other information:</h2>
   <ul>
-    <li>Username: {{user.username}}</li>
-    <li>Email address: {{user.email}}</li>
     <li>Total rewards:{{user.profile.total_rewards}}</li>
+    <li><a href="/accounts/password_change">Change your password</a></li>
   </ul>
-  
+
+  <form action="/accounts/logout">
+    <input id="submit" type="submit" value="Logout">
+  </form>
+
 </div>
 
 {% else %}
@@ -38,8 +97,10 @@
 <form class="login-form" method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Log In</button>
+  <button id="submit" type="submit" >Log In</button>
 </form>
+
+
 
 {% endif %}
 

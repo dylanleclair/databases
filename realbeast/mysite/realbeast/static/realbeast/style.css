@@ -151,14 +151,6 @@
     color:white;
   }
   
-  #email {
-    font-family: var(--monospace);
-    text-align:center;
-  }
-  
-  
-  
-  
   #newsletter {
     font-family: Overpass;
     width: 100vw;

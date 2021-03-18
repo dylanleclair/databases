@@ -9,7 +9,7 @@ urlpatterns = [
     path('products/', views.products, name='products'),
     # ex: /realbeast/products/5/
     path('products/<int:product_id>/', views.product_page, name='product_page'),
-    
+    path('update_user_info/<int:user_id>/', views.vote, name='vote'),
     path('<int:question_id>/', views.detail, name='detail'),
     
     # this code will:

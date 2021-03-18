@@ -16,9 +16,12 @@ TODO:
     font-size:1.2vw;
   }
 
-
+  #home:link {
+    text-decoration: none;
+  }
   .title {
     font-size: 1.5rem;
+    
   }
 
   main {
@@ -212,14 +215,6 @@ TODO:
     background-color: black;
     color:white;
   }
-  
-  #email {
-    font-family: var(--monospace);
-    text-align:center;
-  }
-  
-  
-  
   
   #newsletter {
     font-family: Overpass;
