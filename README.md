@@ -1,14 +1,13 @@
 # databases
 databases project for school
 
-
 This project will connect to a MySQL server running on localhost, with:
 - username: admin
 - password: password
 
 and runs the web app. 
 
-I recommend following the tutorial at the Django documentation to see how it all fits together. 
+I recommend following the tutorial at the Django documentation to see how it all fits together. There is a good amount of inline documentation as well. 
 
 ### Handy commands
 
