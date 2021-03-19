@@ -1,0 +1,26 @@
+[
+    {
+      "model": "realbeast.Store",
+      "pk": 1,
+      "fields": {
+        "location": "Market Mall",
+        "owner_id" : "1"
+      }
+    },
+    {
+      "model": "realbeast.Store",
+      "pk": 2,
+      "fields": {
+        "location": "Downtown",
+        "owner_id" : "1"
+      }
+    },
+        {
+      "model": "realbeast.Store",
+      "pk": 3,
+      "fields": {
+        "location": "Chinook",
+        "owner_id" : "1"
+      }
+    }
+  ]

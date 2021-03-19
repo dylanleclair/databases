@@ -1,0 +1,32 @@
+[
+    {
+      "model": "realbeast.Product",
+      "pk": 1,
+      "fields": {
+        "name": "100 Thieves 2020 Jersey",
+        "sex" : "M",
+        "price" : 100,
+        "img_name": "100t-white.jpg" 
+      }
+    },
+    {
+      "model": "realbeast.Product",
+      "pk": 2,
+      "fields": {
+        "name": "100 Thieves Jam Hoodie",
+        "sex" : "U",
+        "price" : 100,
+        "img_name": "100t-jam.jpg" 
+      }
+    },
+    {
+        "model": "realbeast.Product",
+        "pk": 3,
+        "fields": {
+            "name": "100 Thieves Camping SZN Hoodie",
+            "sex" : "U",
+            "price" : 100,
+            "img_name": "100t-camp.jpg" 
+          }
+      }
+  ]

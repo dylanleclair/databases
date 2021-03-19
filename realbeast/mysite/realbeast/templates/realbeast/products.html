@@ -1,0 +1,70 @@
+
+<!-- Instead of duplicating a bunch of HTML, 
+  we can simply extend other HTML files! -->
+{% extends 'realbeast/base.html' %}
+
+{% block title %}Realbeast - Products{% endblock %}
+
+<!-- Local files-->
+{% load static %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'realbeast/product_style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+      <h1>Mens Apparel</h1>
+      <!--Add an area to enter filters -->
+      <p id="filters">filters: jersey, medium</p>
+    
+      <section id="product-listings">
+    
+        <!-- add links on each image to the item's page-->
+        
+        <!-- use a similar for-loop to what's in the old templates/realbeast/index.html to generate a grid item for it in the product-container using the format already laid out-->
+
+        {% for product in products %}
+        <div id="product-container">
+          <figure>    
+            <figcaption id="product-title">{{ product.name }}</figcaption>
+            <a href="/products/{{ product.id}}">
+              <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" alt="100 thieves jersey"/>
+            </a>
+            </figure>
+
+          <div id="product-desc">
+            <!-- form for sizing-->
+            <p id="price">${{ product.price }}</p>
+            <p id="sizes"></p> <!-- add sizing options-->
+              <div id="cartbutton">
+                <button>Add To Cart</button> 
+              </div>
+           </div>
+        </div>
+        {% endfor %}
+
+    
+      </section>
+    
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+</body>
+</html>
