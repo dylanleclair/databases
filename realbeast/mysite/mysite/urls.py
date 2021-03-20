@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from mysite import views
 
 urlpatterns = [
-    path('', include('realbeast.urls')), # directs to root of realbeast
+    #path('', views.index, name='index'), # directs to root of realbeast
+    path('', views.index, name='index'),
     path('realbeast/', include('realbeast.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')), # adding login functionality!

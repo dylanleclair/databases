@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from .models import *
 
 admin.site.register(Profile)
-admin.site.register(PaymentInfo)
 admin.site.register(Store)
 admin.site.register(WorksAt)
 admin.site.register(Order)

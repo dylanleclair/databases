@@ -20,7 +20,7 @@
       <p id="filters">filters: jersey, medium</p>
     
       <section id="product-listings">
-    
+      
         <!-- add links on each image to the item's page-->
         
         <!-- use a similar for-loop to what's in the old templates/realbeast/index.html to generate a grid item for it in the product-container using the format already laid out-->
@@ -29,8 +29,8 @@
         <div id="product-container">
           <figure>    
             <figcaption id="product-title">{{ product.name }}</figcaption>
-            <a href="/products/{{ product.id}}">
-              <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" alt="100 thieves jersey"/>
+            <a href="/realbeast/products/{{ product.id}}">
+              <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}"/>
             </a>
             </figure>
 

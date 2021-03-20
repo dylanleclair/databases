@@ -16,6 +16,45 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'realbeast/style.css' %}">
+<style>
+
+.uinfo {
+  font-family: var(--monospace);
+  min-height: 100vh;
+  width: 40%;
+  margin:auto;
+}
+
+.uinfo h2 {
+  text-align: center;
+  font-family: Overpass;
+  font-size: 2rem;
+}
+
+.login-form {
+  font-family: var(--monospace);
+}
+
+.form-group {
+  display: grid;
+  grid-template-columns: 100%;
+  row-gap: 0.6rem;
+  flex-direction: column;
+  justify-content: center;
+  margin: 20px 0px 20px 0px;
+  text-align: left;
+}
+
+#submit {
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-family: Overpass;
+  padding: 0.3rem;
+}
+  
+</style>
 
 <head>
   <meta charset="utf-8">
@@ -25,6 +64,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="">
 </head>
+
+
 
 <body>
   <!--[if lt IE 7]>
@@ -47,9 +88,9 @@
         <a class="nav-link" href="#product">our brand</a>
         <a class="nav-link" href="/realbeast/products">store</a>
         {% if user.is_authenticated %}
-        <a class="nav-link" href="/accounts/login/">my account</a>
+        <a class="nav-link" href="/realbeast/account">my account</a>
         {% else %}
-        <a class="nav-link" href="/accounts/login/">sign in</a>
+        <a class="nav-link" href="/realbeast/account">sign in</a>
         {% endif %}
       </nav>
 
@@ -87,13 +128,43 @@
       </section>
       {% if user.is_authenticated %}
       {% else %}
-      <section id="newsletter">
-        <form id="form" action="https://www.google.com" target="_blank">
-          <h2>Sign up!</h2>
-          <label class="form-label" for="email">Just one click away.</label>
-          <input class="form-element" type="submit" id="submit" name="submit" value="Sign up">
-        </form>
-      </section>
+      <div class="uinfo" id="registration">
+
+          <h2>Sign up for an account!</h2>
+          
+          <p>Please note that this website is not real. You should not enter a real credit card number.</p>
+
+          <form class="form-group" action="{% url 'realbeast:register' %}" method="post">
+              {% csrf_token %}
+          
+              <!-- user information inputs here -->
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" maxlength="30" placeholder="jsmith" required>
+          
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" maxlength="100" placeholder="password" required>
+          
+              <label for="username">First name</label>
+              <input type="text" id="firstname" name="firstname" maxlength="30" placeholder="John" required>
+          
+              <label for="username">Last name</label>
+              <input type="text" id="lastname" name="lastname" maxlength="30" placeholder="Smith" required>
+          
+              <label for="email">Email address</label>
+              <input type="text" id="email-id" name="email" maxlength="30" placeholder="johnsmith@realbeast.com}" required>
+          
+              <label for="address">Shipping address</label>
+              <input type="text" id="address" name="address" maxlength="50" placeholder="123 Realbeast Drive, Los Angeles, CA" required>
+          
+              <label for="address">Phone</label>
+              <input type="text" id="phone" name="phone" maxlength="10" placeholder="4031234567" required>
+          
+              <label for="card_no">Credit Card Number</label>
+              <input type="text" id="card_no" name="card_no" maxlength="16" placeholder="1234567891011121" required>
+              
+              <input id="submit" type="submit" value="Register">
+            </form>
+          </div>
       {% endif %}
     </main>
 
