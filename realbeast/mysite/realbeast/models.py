@@ -27,6 +27,7 @@ class Profile(models.Model): # extends Django user / auth
     user_type = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=200)
+    card_no = models.CharField(max_length=200) # should this be an integer?
     # use User.is_staff to check if staff
     # use User.is_superuser to check if superuser
 
@@ -34,6 +35,7 @@ class Profile(models.Model): # extends Django user / auth
 def create_user_profile(sender,instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance) # creates a profile for every new user
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -46,10 +48,8 @@ class Address(models.Model):
     address = models.CharField(max_length=200)
 '''
 
-# defining the multivalued user attributes
-class PaymentInfo(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    card_no = models.CharField(max_length=200) # should this be an integer?
+'''simplified into profile'''
+
 ''' SIMPLIFIED into profile
 # defining the multivalued user attributes
 class PhoneNumber(models.Model):
@@ -84,7 +84,6 @@ class Order(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE) # if the user is deleted, delete their orders
     store_id = models.ForeignKey(Store, on_delete=models.CASCADE) # if the store is closed, set the store to null
 
-    
 class Payment(models.Model):
     payment_type = models.CharField(max_length=200)
     amount = models.DecimalField(default=0, max_digits=20, decimal_places=2)
