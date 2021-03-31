@@ -6,7 +6,9 @@
         "name": "100 Thieves 2020 Jersey",
         "sex" : "M",
         "price" : 100,
-        "img_name": "100t-white.jpg" 
+        "img_name": "100t-white.jpg", 
+        "description" : "Support the 100 Thieves with our all new ultrawhite jersey.",
+        "caption" : "A preview of the white colourway."
       }
     },
     {
@@ -15,8 +17,10 @@
       "fields": {
         "name": "100 Thieves Jam Hoodie",
         "sex" : "U",
-        "price" : 100,
-        "img_name": "100t-jam.jpg" 
+        "price" : 115,
+        "img_name": "100t-jam.jpg",
+        "description":"A premium red-black tie dye, every piece has its own personality.",
+        "caption":"A preview of the sweatshirt from the front."
       }
     },
     {
@@ -25,8 +29,10 @@
         "fields": {
             "name": "100 Thieves Camping SZN Hoodie",
             "sex" : "U",
-            "price" : 100,
-            "img_name": "100t-camp.jpg" 
+            "price" : 115,
+            "img_name": "100t-camp.jpg",
+            "description":"The No Camping Collection features the most ambitious designs from 100 Thieves yet.",
+            "caption":"A preview of the sweatshirt from the back."
           }
       }
   ]

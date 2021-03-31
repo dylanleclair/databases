@@ -71,6 +71,20 @@ https://docs.djangoproject.com/en/3.1/ref/templates/language/
 - add previews of quantity (per store) for each product :heavy_check_mark:
 - implement Django REST to get us an API (due for the 25th) :arrows_counterclockwise:
 
+# Our REST API
+
+Our API can be accessed through HTML or through Postman. 
+
+To modify data in postman, you will have to add basic authentication. 
+
+A sample user you may use is: 
+
+Username: `stellaellaolla`
+Password: `12345`
+
+Documentation for our REST API can be found at localhost:8000/api.
+
+
 ### old
 
 To open the solution for this project, navigate to RealBeast > RealBeast.csproj and double click. It will open up in Visual Studio.

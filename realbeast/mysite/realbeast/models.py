@@ -111,27 +111,27 @@ class Details(models.Model):
     text = models.CharField(max_length=200)
 
 class Brand(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='brands')
     brand = models.CharField(max_length=200)
 
 class Size(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sizes')
     size = models.CharField(max_length=200)
     quantity = models.IntegerField(default=0)
-    store_id = models.ForeignKey(Store, on_delete=models.CASCADE) # if store is deleted, delete this too
+    store_id = models.ForeignKey(Store, on_delete=models.CASCADE,related_name='store') # if store is deleted, delete this too
 
 class ProductType(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_type')
     product_type = models.CharField(max_length=200)
 
 class Color(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='colors')
     color = models.CharField(max_length=200)
 
 
 # m:n relationships
 class Contains(models.Model):
-    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='contains')
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
     quantity = models.PositiveIntegerField(default=1)
 

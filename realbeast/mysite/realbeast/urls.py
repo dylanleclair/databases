@@ -6,11 +6,14 @@ app_name='realbeast'
 urlpatterns = [
     # ex: /realbeast/
     path('', views.index, name='index'),
+
+    
     # /realbeast/products/
     path('products/', views.products, name='products'),
     # ex: /realbeast/products/5/
     path('products/<int:product_id>/', views.product_page, name='product_page'),
     path('update_user_info/<int:user_id>/', views.update_user_info, name='update_user_info'),
+    path('add_to_cart/<int:product_id>', views.add_to_cart, name='add_to_cart'),
     path('<int:question_id>/', views.detail, name='detail'),
     path('account/', views.account, name='account'),
     path('cart/',views.cart, name='cart'),
