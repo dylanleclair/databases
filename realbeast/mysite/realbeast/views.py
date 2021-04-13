@@ -6,11 +6,12 @@ from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
-from realbeast.serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, StoreSerializer, UserSerializer
-from rest_framework import viewsets, generics
+from .serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, StoreSerializer, UserSerializer
+from rest_framework import generics, permissions, status, viewsets
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-
+from rest_framework.views import APIView
+from rest_framework import serializers
 # Create your views here.
 
 def index(request):
@@ -157,12 +158,12 @@ def update_user_info(request, user_id):
     return HttpResponseRedirect(reverse('realbeast:account'))
 
 def register(request):
-    username = request.POST['username'];
-    email = request.POST['email'];
-    password = request.POST['password'];    
-    user = User.objects.create_user(username,email,password);
-    user.first_name = request.POST['firstname'];
-    user.last_name = request.POST['lastname'];
+    username = request.POST['username']
+    email = request.POST['email']
+    password = request.POST['password']   
+    user = User.objects.create_user(username,email,password)
+    user.first_name = request.POST['firstname']
+    user.last_name = request.POST['lastname']
     user.profile.address = request.POST['address']
     user.profile.phone_number = request.POST['phone']
     user.profile.card_no = request.POST['card_no']
@@ -248,7 +249,7 @@ def cart(request):
         'cart_items': cart_items,
     }
     template = loader.get_template('realbeast/cart.html')
-    return HttpResponse(template.render(context, request));
+    return HttpResponse(template.render(context, request))
 
 
 # API VIEWS
@@ -336,3 +337,85 @@ class OrderViewSet(viewsets.ModelViewSet, CountModelMixin):
     '''
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+
+class UserAPIView(APIView):
+    '''
+    Gets the data associated with the logged in user. Supports CRUD. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_user(self,user_id):
+        try:
+            return User.objects.get(id= user_id)
+        except User.DoesNotExist:
+            return None
+    
+    # Used to create a user
+    def post(self,request, *args, **kwargs):
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = User.objects.create_user(username,email,password)
+        user.first_name = request.data.get('first_name')
+        user.last_name = request.data.get('last_name')
+        user.is_staff = request.data.get('is_staff') # determines whether user is staff or not
+        data = {
+            'user': user,
+            'profile': request.data.get('profile'),
+            'email':request.data.get('email')
+        }
+        serializer = CustomerSerializer(instance=user, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+        #user = authenticate(request,username=username, password=password)
+        #login(request,user) # log them in!
+        return 
+    # Retreives a user's data
+    def get(self,request, *args, **kwargs):
+        '''
+        List profile information for given users
+        '''
+        
+        usr = User.objects.get(id= request.user.id)
+        if not usr:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = CustomerSerializer(usr, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Updates a users data
+    def put(self,request,*args,**kwargs):
+        '''
+        Updates the logged in user, if they exist
+        '''
+        usr = self.get_user(request.user.id)
+        if not usr:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            'user': usr,
+            'profile': request.data.get('profile'),
+            'email':request.data.get('email')
+        }
+        serializer = CustomerSerializer(instance=usr, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,*args,**kwargs):
+        '''
+        Deletes the user
+        '''
+        usr = self.get_user(request.user.id)
+        if not usr:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        usr.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )

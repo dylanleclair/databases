@@ -56,6 +56,7 @@ class PhoneNumber(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=200) # should this be an integer?
 '''
+
 ''' SIMPLIFIED into profile -> see user_type
 # defining user classes
 class Owner(models.Model):

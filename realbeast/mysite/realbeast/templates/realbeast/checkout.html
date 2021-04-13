@@ -1,0 +1,50 @@
+{% extends 'realbeast/base.html' %}
+
+{% block title %}Realbeast - {{product.name}}{% endblock %}
+<!-- Local files-->
+{% load static %}
+
+{% block style %}
+
+<style>
+    .form-group {
+        width: 80%;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    label {
+        font-family: Overpass;
+        font-size: large;
+    }
+
+</style>
+
+{% endblock %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<section id="checkout">
+  <h1>Checkout</h1>
+
+  <p>Are you sure you're ready to checkout?</p>
+  <ul>
+    <li>The card on your account will be charged {{price}}</p>
+    <li>The order will be shipped to the address associated with your account: {{address}}</li>
+    <li>A confirmation email will be sent to your email address.</li>
+    <li>You can return any products in store up to 30 days after purchase.</li>
+  </ul>
+  <form>
+      <input type="submit" id="submit" value="Place order">
+  </form>
+
+</section>
+{% else %}
+
+<h1>Uh oh! You shouldn't be here.</h1> 
+
+{% endif %}
+
+{% endblock %}

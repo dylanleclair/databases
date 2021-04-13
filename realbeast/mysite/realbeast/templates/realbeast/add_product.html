@@ -1,0 +1,85 @@
+{% extends 'realbeast/base.html' %}
+
+{% block title %}Realbeast - {{product.name}}{% endblock %}
+<!-- Local files-->
+{% load static %}
+
+{% block style %}
+
+<style>
+    .form-group {
+        width: 80%;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    label {
+        font-family: Overpass;
+        font-size: large;
+    }
+
+</style>
+
+{% endblock %}
+{% block content %}
+
+{% if user.is_staff %}
+<section id="add-product">
+  
+<!-- Add a product here -->
+
+<form class="form-group">
+    <label for="product_name">Product Name</label>
+    <input id="product_name" name="product_name" type="text" placeholder="New Product">
+
+    <label for="product_price">Price</label>
+    <input id="product_price" name="product_price" type="number" placeholder="Price">
+
+    <label for="img">Product image:</label>
+    <input type="file" id="img" name="img" accept="image/*">
+
+    <label for="product_description">Description</label>
+    <textarea id="product_description" name="product_description">
+        Enter a description of the product here!
+    </textarea>
+
+    <label for="sex">Which sex is the product designed for?</label>
+    <label><input id="sex" type="radio" name="sex" value="M" checked="checked"/>Male </label>
+    <label><input id="sex" type="radio" name="sex" value="F"/>Female </label>
+    <label><input id="sex" type="radio" name="sex" value="U"/>Unisex</label>
+
+    <label for="product-caption">Caption</label>
+    <input id="product-caption" name="product-caption" type="number" placeholder="Caption">
+
+    <label for="brands">Brands</label>
+    <p>Please enter brands as values separated by commas.</p>
+    <textarea id="brands" name="brands" placeholder="Adidas, Nike, New Balance, ...">
+    </textarea>
+
+    <label for="product_type">Product Type</label>
+    <p>Please enter the product type(s) as values separated by commas.</p>
+    <textarea id="product_type" name="product_type" placeholder="Running, Shoes ...">
+    </textarea>
+
+    <label for="colors">Colors</label>
+    <p>Please enter the colors the product is available in as values separated by commas.</p>
+    <textarea id="colors" name="colors" placeholder="Red, White, Black, ...">
+    </textarea>
+
+    <label>Stock information</label>
+    <!-- For each store, enter a starting quantity -->
+
+
+    <input id="submit" type="submit" value="List new product!">
+</form>
+
+</section>
+{% else %}
+
+<h1>Uh oh! You shouldn't be here.</h1> 
+
+{% endif %}
+
+{% endblock %}
