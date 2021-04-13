@@ -1,25 +1,56 @@
 # databases
 databases project for school
 
-This project will connect to a MySQL server running on localhost, with:
-- username: admin
-- password: password
-
-(maybe move over to noSQL so we can coordinate it?)
-
-and runs the web app. 
+This project uses a SQLite database so that we can coordinate it with the repo of the project. 
 
 I recommend following the tutorial at the Django documentation to see how it all fits together. There is a good amount of inline documentation as well. 
 
-### Handy commands
+# Quickstart guide
 
-#### Getting started
+Clone this repository to your computer.
 
-I'd recommend you go through at least a bit of the tutorial at the Django documentation.
+To run the server locally, navigate to `realbeast/mysite` folder from the top repository directory, and run: 
 
-https://docs.djangoproject.com/en/3.1/intro/tutorial01/
+`python manage.py runserver`
 
-#### Changing models in the database
+Then, you can open up http://127.0.0.1:8000/ in your browser - welcome to our website!
+
+A browsable API is available at http://127.0.0.1:8000/api
+
+## Using the quickstart
+
+Only registered users can access their cart and place orders.
+
+Sign into admin by navigating to the login page, enter:
+
+- Username: `admin`
+- Password: `12345`
+
+From here, you can either do some shopping, update item information, place restock orders and more. 
+
+
+# To do list (web interface)
+- creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
+- add user registration, sign in and account management pages :heavy_check_mark:
+- add store page and product view pages :heavy_check_mark:
+- added skeleton for filtering store (needs to be made functional) :arrows_counterclockwise:
+- added skeleton for updating product information (quantities, description, titles, etc) :arrows_counterclockwise:
+- implement Django REST to get desired API functionality (see endpoints) :arrows_counterclockwise:
+
+# Our REST API
+
+Our API can be accessed through HTML or through Postman. 
+
+To modify data in postman, you will have to add basic authentication. 
+
+A sample user you may use is: 
+
+Username: `stellaellaolla`
+Password: `12345`
+
+Documentation for our REST API can be found at localhost:8000/api.
+
+#### Notes to self (django stuff)
 
 To change items in the database, you will first want to change the model (realbeast/models.py). 
 
@@ -47,48 +78,3 @@ Then, any time you update the values in Product.json, you can move them into the
 
 Evenutally, I want to set up something that can programmatically do this. :) 
 
-#### Currently:
-
-I'm working on managing sign ins and authentications so that I can start to add cart / shopping functionality down the line. 
-
-The resource I'm following is:
-https://learndjango.com/tutorials/django-login-and-logout-tutorial
-
-https://docs.djangoproject.com/en/3.1/ref/templates/language/
-
-#### Goals for future
-- creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
-- stylizing login page (goes hand in hand with the above)
-    - ready to go, just needs polishing:heavy_check_mark:
-- creating an account management page (also goes hand in hand with first) :arrows_counterclockwise:
-    - drafted :heavy_check_mark:
-    - add ability to update data 
-- adding form functionality to product page so that filters can be applied for: :arrows_counterclockwise:
-    - sizes
-    - colours
-    - product types
-    - sex  
-- add previews of quantity (per store) for each product :heavy_check_mark:
-- implement Django REST to get us an API (due for the 25th) :arrows_counterclockwise:
-
-# Our REST API
-
-Our API can be accessed through HTML or through Postman. 
-
-To modify data in postman, you will have to add basic authentication. 
-
-A sample user you may use is: 
-
-Username: `stellaellaolla`
-Password: `12345`
-
-Documentation for our REST API can be found at localhost:8000/api.
-
-
-### old
-
-To open the solution for this project, navigate to RealBeast > RealBeast.csproj and double click. It will open up in Visual Studio.
-
-To create an instance of the database on your computer, open Tools > NuGet Package Manager > Package Manager Console, and run `Update-Database`.
-
-From there, you can experiment with the data. There is next to no functionality yet but the groundwork is just about done!
