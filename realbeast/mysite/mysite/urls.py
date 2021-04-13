@@ -16,11 +16,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from mysite import views
+from realbeast.views import *
+from rest_framework import routers
+from mysite import api as myapi
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = myapi.DocumentedRouter()
+#router.register(r'profiles', ProfileViewSet)
+router.register(r'users', UserViewSet)
+router.register(r'profiles', ProfileViewSet)
+router.register(r'stores', StoreViewSet)
+router.register(r'customers', CustomerViewSet)
+router.register(r'products', ProductViewSet)
+router.register(r'brands', BrandViewSet)
+router.register(r'orders', OrderViewSet)
 
 urlpatterns = [
-    #path('', views.index, name='index'), # directs to root of realbeast
-    path('', views.index, name='index'),
+    path('', views.index, name='index'),# directs to root of realbeast
+    path('api/',include(router.urls)), # directs to the REST API
     path('realbeast/', include('realbeast.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')), # adding login functionality!
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -46,6 +46,10 @@
     font-family: var(--monospace);
     font-size: 0.8rem;
     line-height: 1.5em;
+    /*display:flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;*/
   }
   #product-text #price {
     font-size: 1.5rem;
@@ -95,6 +99,26 @@
     width: 2.5rem;
     margin-right: 0.5rem;
   }
+
+  .form-group {
+    padding-top: 10px;
+    grid-area: content;
+    display: flex;
+    flex-direction: row;
+    width:80%;
+    flex-wrap: nowrap;
+    justify-content:center;
+  }
+
+  #quantity {
+    width:30%;
+    padding:11px;
+  }
+  #submit{
+    width:50%;
+    padding:10px;
+  }
+
 </style>
 {% endblock %}
 {% block content %}
@@ -103,25 +127,33 @@
     <h1 id="product-title">{{product.name}}</h1>
       <figure>    
         <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}"/>
-        <figcaption>The white colourway of the jersey.</figcaption>
+        <figcaption>{{product.caption}}</figcaption>
         
       </figure>
 
     <div id="product-text">
-      <p>The ultimate esports jersey.</p>
       <!-- form for sizing-->
-      <p id="price">$100</p>
+      <p id="price">${{product.price}}</p>
       
-      <p>Support the 100 Thieves with our new ultrawhite jersey.</p>
-      <ul>
-        <li>Pullover hooded sweatshirt with kangaroo pocket</li>
-        <li>Ribbed side panels, cuffs, and hem</li>
-        <li>Front Logo graphic print</li>
-        <li>Regular fit.</li>
-        <li>Custom 100 Thieves Woven Label on the side seam</li>
-        <li>Pullover hooded sweatshirt with kangaroo pocket</li>
-        <li>Preshrunk to minimize shrinkage</li>
-      </ul>
+      <p>{{product.description}}</p>
+
+      {% if instock %} <!--change to check if in stock online -->
+      <form class="form-group" action="{% url 'realbeast:add_to_cart' product.id %}"" method='post'>
+        {% csrf_token %}
+        <!-- only need a submit! -->
+        <input type="number" id="quantity" name="quantity"max="99" min="1" required value="1">
+        <!-- add a size field -->
+
+        <!-- 
+        <label> <radio checked></radio></label>
+        -->
+
+        <!-- Add a color field -->
+
+        <!-- maybe add a quantity field?-->
+        <input type="submit" id="submit"  value="Add to Cart">
+      </form>
+      {% endif %}
      </div>
     </div>
   </section>
@@ -154,5 +186,14 @@
 
     {% endif %}
   </section>
+
+  <!-- if user is authenticated, add an 'edit' button so that products editable by staff-->
+  {% if user.is_staff %}
+
+  <form>
+    <input type="submit" value="Edit">
+  </form>
+
+  {% endif %}
 
 {% endblock %}

@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
-from .models import User, Product, Store, Size, Order, Contains
+from .models import User, Product, Store, Size, Order, Contains, Brand, Profile, Color, ProductType
 from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+from realbeast.serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, StoreSerializer, UserSerializer
+from rest_framework import viewsets, generics
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+
 # Create your views here.
 
 def index(request):
@@ -20,11 +25,24 @@ def index(request):
 def products(request):
 
     # get a list of products instead!
-    products = Product.objects.all()[:12];
+    products = Product.objects.all()[:12]
     template = loader.get_template('realbeast/products.html')
+
+    brands = Brand.objects.all()
+
+    sexes = ['M', 'F', 'U']
+
+    colors = Color.objects.all()
+
+    types = ProductType.objects.all() 
+
     context = {
         'products':products,
-    }
+        'brands':brands,
+        'sexes':sexes,
+        'types':types,
+        'colors':colors,
+        }
 
     return HttpResponse(template.render(context, request))
 
@@ -98,17 +116,45 @@ def register(request):
     login(request,user) # log them in!
     return HttpResponseRedirect(reverse('realbeast:products'))
 
+def add_to_cart(request, product_id):
+    if request.user.is_authenticated:
+        # if the user is authenticated, 
+        # find their cart (ie: order with status="Cart")
+        # and add (1x) the product to it
+        user = request.user
+        cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
+        product = Product.objects.get(pk=product_id)
+        quantity = request.POST['quantity']
+        # if the user already has item in cart, update quantity
+        item_set = Contains.objects.filter(order_id=cart, product_id=product)
+        if len(item_set) > 0:
+            item = item_set[0]
+            item.quantity += 1
+            item.save()
+            #Size.objects.get(product_id=product, store_id__location='Online')
+        else:
+        # else, add new entry to the cart
+        # identify the product
+            item = Contains(order_id=cart,product_id=product,quantity=quantity)
+            item.save() # save to the database
+    
+        
+        return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
+
 def my_login(request):
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request,user)
-        # redirect to the store page.
+        # redirect to the store.
         return HttpResponseRedirect(reverse("realbeast:products"))
     else:
         # Return an 'invalid login' error message.
         raise Http404("Invalid login")
+
+def apply_filters(request):
+    raise Http404("Not yet implemented")
 
 def cart(request):
     user = request.user # retreive the logged in user
@@ -130,8 +176,106 @@ def cart(request):
             }
         )
 
+
+    # CALCULATE THE TOTALS and include in context
+
+    # calculate subtotal
+
+    # calculate taxes
+
+    # calculate shipping (flat rate cuz ill wanna kms otherwise)
+
+    # grand total
+
     context = {
         'cart_items': cart_items,
     }
     template = loader.get_template('realbeast/cart.html')
     return HttpResponse(template.render(context, request));
+
+
+# API VIEWS
+
+
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+# https://stackoverflow.com/questions/25151586/django-rest-framework-retrieving-object-count-from-a-model
+class CountModelMixin(object):
+    """
+    Count a queryset.
+    """
+    @action(detail=False)
+    def count(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        content = {'count': queryset.count()}
+        return Response(content)
+
+# the triple quoted comments for each of these are converted to markdown
+# which is rendered on the browsable API views
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows profiles to be viewed or edited.
+    Profiles have a one-to-one relationship with the Users object, which handles authentication. 
+    
+    Profiles serve to add the information users needs for our project to a user's authentication details. 
+    
+    This includes: 
+    
+    - user type
+    - addresses
+    - rewards points
+    - phone numbers
+    - and payment information.  
+    """
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+
+class StoreViewSet(viewsets.ModelViewSet):
+    '''
+    
+    '''
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
+
+
+
+class CustomerViewSet(viewsets.ModelViewSet, CountModelMixin):
+    '''
+    Combines the user and profile objects
+    '''
+    queryset = User.objects.all()
+    serializer_class = CustomerSerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet, CountModelMixin):
+    '''
+    Combines the user and profile objects
+    '''
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class BrandViewSet(viewsets.ModelViewSet):
+    queryset = Brand.objects.all()
+    serializer_class = BrandSerializer
+
+class ProductBrandList(generics.ListAPIView):
+    serializer_class = Product
+    def get_queryset(self):
+        return Brand.filter
+
+class OrderViewSet(viewsets.ModelViewSet, CountModelMixin):
+    '''
+    Combines the user and profile objects
+    '''
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer

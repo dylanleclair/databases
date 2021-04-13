@@ -6,16 +6,20 @@ app_name='realbeast'
 urlpatterns = [
     # ex: /realbeast/
     path('', views.index, name='index'),
+
+    
     # /realbeast/products/
     path('products/', views.products, name='products'),
     # ex: /realbeast/products/5/
     path('products/<int:product_id>/', views.product_page, name='product_page'),
     path('update_user_info/<int:user_id>/', views.update_user_info, name='update_user_info'),
+    path('add_to_cart/<int:product_id>', views.add_to_cart, name='add_to_cart'),
     path('<int:question_id>/', views.detail, name='detail'),
     path('account/', views.account, name='account'),
     path('cart/',views.cart, name='cart'),
     path('my_login/', views.my_login, name='my_login'),
     path('register/', views.register, name='register'),
+    path('apply_filters', views.apply_filters, name='apply_filters')
     # this code will:
     # match a path with /realbeast/<integer> (ex: localhost:8000/realbeast/1)
     # it will then call the function with the name 'detail' from the module views.detail (see views)

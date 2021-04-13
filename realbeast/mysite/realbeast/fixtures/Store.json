@@ -15,11 +15,19 @@
         "owner_id" : "1"
       }
     },
-        {
+    {
       "model": "realbeast.Store",
       "pk": 3,
       "fields": {
         "location": "Chinook",
+        "owner_id" : "1"
+      }
+    },
+    {
+      "model": "realbeast.Store",
+      "pk": 4,
+      "fields": {
+        "location": "Online",
         "owner_id" : "1"
       }
     }
