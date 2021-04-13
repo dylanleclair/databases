@@ -268,75 +268,6 @@ class CountModelMixin(object):
         content = {'count': queryset.count()}
         return Response(content)
 
-# the triple quoted comments for each of these are converted to markdown
-# which is rendered on the browsable API views
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    #permission_classes = [permissions.IsAuthenticated]
-
-class ProfileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows profiles to be viewed or edited.
-    Profiles have a one-to-one relationship with the Users object, which handles authentication. 
-    
-    Profiles serve to add the information users needs for our project to a user's authentication details. 
-    
-    This includes: 
-    
-    - user type
-    - addresses
-    - rewards points
-    - phone numbers
-    - and payment information.  
-    """
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-    #permission_classes = [permissions.IsAuthenticated]
-
-class StoreViewSet(viewsets.ModelViewSet):
-    '''
-    
-    '''
-    queryset = Store.objects.all()
-    serializer_class = StoreSerializer
-
-
-
-class CustomerViewSet(viewsets.ModelViewSet, CountModelMixin):
-    '''
-    Combines the user and profile objects
-    '''
-    queryset = User.objects.all()
-    serializer_class = CustomerSerializer
-
-
-class ProductViewSet(viewsets.ModelViewSet, CountModelMixin):
-    '''
-    Combines the user and profile objects
-    '''
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-class BrandViewSet(viewsets.ModelViewSet):
-    queryset = Brand.objects.all()
-    serializer_class = BrandSerializer
-
-class ProductBrandList(generics.ListAPIView):
-    serializer_class = Product
-    def get_queryset(self):
-        return Brand.filter
-
-class OrderViewSet(viewsets.ModelViewSet, CountModelMixin):
-    '''
-    Combines the user and profile objects
-    '''
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-
 '''
 Probably the only thing worth noting from this!
 
@@ -468,6 +399,12 @@ class ProductAPIView (APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = ProductSerializer(products,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class OrderAPIView(APIView):
+    '''
+    API endpoint for managing orders
+    '''
 
 
 # Store API - implements store endpoints
