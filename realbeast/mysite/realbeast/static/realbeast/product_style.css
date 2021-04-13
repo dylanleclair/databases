@@ -239,7 +239,7 @@ TODO:
 
 
 
-  form {
+  .form-group {
     margin-top:10px;
     display: grid;
     grid-template-columns: 30vw;
@@ -287,7 +287,7 @@ TODO:
       grid-row-gap: 20px;
       text-align:center;
       }
-      form {
+      .form-group {
         grid-template-columns: 80vw;
   
       }
