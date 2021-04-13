@@ -24,12 +24,12 @@ from mysite import api as myapi
 router = myapi.DocumentedRouter()
 #router.register(r'profiles', ProfileViewSet)
 #router.register(r'users', UserViewSet)
-router.register(r'profiles', ProfileViewSet)
-router.register(r'stores', StoreViewSet)
-router.register(r'customers', CustomerViewSet)
-router.register(r'products', ProductViewSet)
-router.register(r'brands', BrandViewSet)
-router.register(r'orders', OrderViewSet)
+#router.register(r'profiles', ProfileViewSet)
+#router.register(r'stores', StoreViewSet)
+#router.register(r'customers', CustomerViewSet)
+#router.register(r'products', ProductViewSet)
+#router.register(r'brands', BrandViewSet)
+#router.register(r'orders', OrderViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),# directs to root of realbeast
@@ -38,5 +38,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')), # adding login functionality!
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/lol/', UserAPIView.as_view(), name="lol")
+    path('api/user/', UserAPIView.as_view(), name="user"),
+    path('api/products/<str:location>/', ProductStoreAPIView.as_view(), name="products"),
+    path('api/product/<int:product_id>/', ProductAPIView.as_view(), name="product"),
+    path('api/stores/<str:location>/', StoreAPIView.as_view(), name="store"),
+    path('api/stores/', StoreAPIView.as_view(), name="stores"),
+
 ]

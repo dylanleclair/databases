@@ -69,6 +69,12 @@ class BrandSerializer(serializers.ModelSerializer):
         fields = ['brand']
 
 class SizeSerializer(serializers.ModelSerializer):
+    #store_id = StoreSerializer()
+    class Meta:
+        model = Size
+        fields = ['size', 'quantity']
+
+class SizeSerializerWithStore(serializers.ModelSerializer):
     store_id = StoreSerializer()
     class Meta:
         model = Size
@@ -84,7 +90,10 @@ class ProductColorSerializer(serializers.ModelSerializer):
         model = Color
         fields = ['color']
 
-class ProductSerializer(serializers.ModelSerializer):
+'''
+A variation of the product serializer that focuses on the store
+'''
+class ProductStoreSerializer(serializers.ModelSerializer):
     brands = BrandSerializer(many=True,read_only=True)
     sizes = SizeSerializer(many=True,read_only=True)
     product_type = ProductTypeSerializer(many=True,read_only=True)
@@ -93,6 +102,19 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['price', 'sex', 'name', 'description', 'brands', 'sizes','product_type','colors'] 
 
+'''
+A variation of the product serializer that is focused on the product
+'''
+class ProductSerializer(serializers.ModelSerializer):
+    brands = BrandSerializer(many=True,read_only=True)
+    sizes = SizeSerializerWithStore(many=True,read_only=True)
+    product_type = ProductTypeSerializer(many=True,read_only=True)
+    colors = ProductColorSerializer(many=True,read_only=True)
+    class Meta:
+        model = Product
+        fields = ['price', 'sex', 'name', 'description', 'brands', 'sizes','product_type','colors'] 
+
+
 
 class OrderSerializer(serializers.ModelSerializer):
     user_id = CustomerSerializer()
@@ -100,3 +122,6 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['total_price','order_date','delivery_date','delivery_status','is_restock','rewards_earned', 'user_id', 'store_id']
+
+
+

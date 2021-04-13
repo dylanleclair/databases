@@ -6,7 +6,7 @@ from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
-from .serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, StoreSerializer, UserSerializer
+from .serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProductStoreSerializer,ProfileSerializer, StoreSerializer, UserSerializer
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -257,7 +257,6 @@ def cart(request):
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
 # https://stackoverflow.com/questions/25151586/django-rest-framework-retrieving-object-count-from-a-model
 class CountModelMixin(object):
     """
@@ -338,7 +337,13 @@ class OrderViewSet(viewsets.ModelViewSet, CountModelMixin):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+'''
+Probably the only thing worth noting from this!
 
+You can make your own views using this!!! 
+
+Will likely use for the rest of the other API endpoints.
+'''
 class UserAPIView(APIView):
     '''
     Gets the data associated with the logged in user. Supports CRUD. 
@@ -419,3 +424,83 @@ class UserAPIView(APIView):
             {"res": "Object deleted!"},
             status=status.HTTP_200_OK
         )
+
+# this is an interface for editing products at a specific store
+# i felt this would be more useful, since it is unlikely all stores will be updated at same time
+class ProductStoreAPIView (APIView):
+    '''
+    Allows product data to be updated and maintained. Supports CRUD, in addition to some queries. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request,location, *args, **kwargs):
+        '''
+        List product information for a given store
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        sizings = Size.objects.filter(store_id__location=location) 
+        products = [item.product_id for item in sizings]
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductStoreSerializer(products,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # create a get that takes store and product id as a parameter
+
+# general product management class -- maybe deprecate & just keep store-based model
+class ProductAPIView (APIView):
+    '''
+    Allows product data to be updated and maintained. Supports CRUD, in addition to some queries. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request,product_id, *args, **kwargs):
+        '''
+        List product information for a given product
+        '''
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        sizings = Size.objects.filter(product_id__id=product_id) 
+        products = [item.product_id for item in sizings]
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(products,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Store API - implements store endpoints
+class StoreAPIView(APIView):    
+    '''
+    Allows a specific store to be altered. Supports CRUD, in addition to some queries. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request,location, *args, **kwargs):
+        '''
+        List information for a given location
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        store = Store.objects.get(location=location) 
+        if not store:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(store, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get(self,request, *args, **kwargs):
+        '''
+        List information for all stores
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        store = Store.objects.all() 
+        if not store:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(store,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # add post, put, delete, etc.
