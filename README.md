@@ -80,5 +80,3 @@ Then call `python manage.py dumpdata realbeast.Product > ./realbeast/fixtures/Pr
 
 Then, any time you update the values in Product.json, you can move them into the database with  `python manage.py loaddata Product`
 
-Evenutally, I want to set up something that can programmatically do this. :) 
-
