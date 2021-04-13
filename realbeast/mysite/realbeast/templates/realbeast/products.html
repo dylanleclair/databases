@@ -36,14 +36,10 @@
   .form-submit {
     margin: 20px;
   }
-  
-
 </style>
 {% endblock %}
 
 {% block content %}
-
-<h1>Mens Apparel</h1>
 <!--Add an area to enter filters -->
 <p id="filters">Select your filters.</p>
 <form id="filter-form" action="{% url 'realbeast:apply_filters' %}" method="post">
@@ -69,7 +65,7 @@
       <h2>Product Types</h2>
       <!-- Choose product types to search from -->
       {% for type in types %}
-      <label><input id="filter" type="checkbox" name="type_filter" value="{{ type.product_type }}">{{ type.product_type}}</label>
+      <label><input id="filter" type="checkbox" name="type_filter" value="{{ type.product_type }}">{{type.product_type}}</label>
       {% endfor %}
     </div>
 
@@ -111,21 +107,6 @@
 </section>
 
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </body>

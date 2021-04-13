@@ -147,12 +147,12 @@
         {% csrf_token %}
         <!-- size selection field -->
         <div id=" size-buttons">
-          {% for size in sizes_online %}
-          <label><input type="radio" id="size" name="size">{{size}}</label>
-          {% endfor %}
-        </div>
+        {% for size in sizes_online %}
+        <label><input type="radio" id="size" name="size">{{size}}</label>
+        {% endfor %}
+    </div>
 
-        
+
     <!-- quantity selection field -->
     <input type="number" id="quantity" name="quantity" max="99" min="1" required value="1">
 
@@ -225,13 +225,14 @@
   {% endif %}
 </section>
 
-  <!-- if user is authenticated, add an 'edit' button so that products editable by staff-->
-  {% if user.is_staff %}
+<!-- if user is authenticated, add an 'edit' button so that products editable by staff-->
+{% if user.is_staff %}
 
-  <form>
+<form action="{% url 'realbeast:product_edit' product.id %}"" method='post'>
+    {% csrf_token %}
     <input type="submit" value="Edit">
-  </form>
+</form>
 
-  {% endif %}
+{% endif %}
 
 {% endblock %}

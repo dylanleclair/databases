@@ -1,0 +1,252 @@
+{% extends 'realbeast/base.html' %}
+
+{% block title %}Realbeast - {{product.name}}{% endblock %}
+<!-- Local files-->
+{% load static %}
+
+{% block style %}
+<style>
+  #product-img {
+    width: 100%;
+
+  }
+
+
+  #product {
+    padding-top: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+  }
+
+  #product-main {
+
+    display: grid;
+    grid-template-areas:
+      "title title"
+      "image content"
+      "caption caption";
+    grid-template-columns: 70% 30%;
+
+  }
+
+
+  #product figcaption {
+    font-family: var(--monospace);
+    font-size: 0.7rem;
+    
+  }
+
+  #product-text {
+    grid-area: content;
+    justify-self: start;
+    text-align: left;
+    width: 100%;
+    font-family: var(--monospace);
+    font-size: 0.8rem;
+    line-height: 1.5em;
+    /*display:flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;*/
+  }
+
+  #product-text #price {
+    font-size: 1.5rem;
+  }
+
+  #product-title {
+    grid-area: title;
+    font-family: Overpass;
+  }
+
+  #product-sizes {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #main {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 80%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  }
+
+  
+  table {
+    font-size: 1.2rem;
+    width: 60%;
+    border: 1px solid black;
+    text-align: center;
+    margin: auto;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+
+  }
+
+  th {
+    font-family: Overpass;
+    border: 1px solid black;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
+
+  }
+
+  td {
+    font-family: var(--monospace);
+    border: 1px solid black;
+    padding: 0.7rem;
+  }
+
+  #out-of-stock {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: Overpass;
+  }
+
+  #out-of-stock img {
+    width: 2.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .form-group {
+    padding-top: 10px;
+    grid-area: content;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  #quantity {
+    width: 30%;
+    padding: 11px;
+  }
+
+  #submit {
+    width: 50%;
+    padding: 10px;
+  }
+
+  #caption {
+    width: 100%;
+  }
+
+  #submit {
+    width: 100%;
+  }
+
+  #description {
+    width: 100%;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+{% if user.is_staff %}
+<form id="main">
+
+  {% csrf_token %}
+  <section id="product">
+    <div id="product-main">
+      <h1 id="product-title">
+        <input type="text" id="caption" name="caption" value="{{product.name}}">
+        </h1>
+
+      <figure>
+        <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" />
+        
+        <figcaption><input type="text" id="caption" name="caption" value="{{product.caption}}"></figcaption>
+
+      </figure>
+
+      <div id="product-text">
+        <!-- form for sizing-->
+        <p id="price">Price:<input id="price" type="number" name="price" value="{{product.price}}"></p>
+        
+        <textarea id="description" name="description">{{product.description}}</textarea>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="product-sizes">
+
+    <!-- we want to have: the sizes of the product and their quantities at online center-->
+    {% if online %}
+    <table>
+      <div id="out-of-stock">
+        <img src="{% static 'realbeast/icons/check.svg' %}">
+        <h2>Currently in stock online.</h2>
+      </div>
+      <tr>
+        <th>Store</th>
+        <th>Size</th>
+        <th>Quantity</th>
+      </tr>
+      {% for store in online_list %}
+      <!-- each store that carries it, along with the amount/sizes they have-->
+      <tr>
+        <td>{{store.location}}</td>
+        <td>{{store.quantity}}</td>
+        <td>{{store.size}}</td>
+      </tr>
+      {% endfor %}
+
+    </table>
+    {% else %}
+    <div id="out-of-stock">
+      <img src="{% static 'realbeast/icons/warning.svg' %}">
+      <h2>Currently out of stock online.</h2>
+    </div>
+    {% endif %}
+
+    {% if instock %}
+    <div id="out-of-stock">
+      <img src="{% static 'realbeast/icons/check.svg' %}">
+      <h2>In stock at these stores:</h2>
+    </div>
+    <table>
+      <tr>
+        <th>Store</th>
+        <th>Size</th>
+        <th>Quantity</th>
+      </tr>
+      {% for store in stores %}
+      <!-- each store that carries it, along with the amount/sizes they have-->
+      <tr>
+        <td>{{store.location}}</td>
+        <td>{{store.quantity}}</td>
+        <td>{{store.size}}</td>
+      </tr>
+      {% endfor %}
+
+    </table>
+    {% else %}
+    <div id="out-of-stock">
+      <img src="{% static 'realbeast/icons/warning.svg' %}">
+      <h2>Currently out of stock in our stores.</h2>
+    </div>
+
+    {% endif %}
+  </section>
+
+  <!-- if user is authenticated, add an 'edit' button so that products editable by staff-->
+
+
+
+  <input id="submit" type="submit" value="Update product information">
+</form>
+
+{% endif %}
+
+{% endblock %}

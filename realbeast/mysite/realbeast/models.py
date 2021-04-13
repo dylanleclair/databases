@@ -134,6 +134,7 @@ class Contains(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='contains')
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
     quantity = models.PositiveIntegerField(default=1)
+    size = models.CharField(max_length=200)
 
 #m:n relationships
 class Modifies(models.Model):
