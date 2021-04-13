@@ -30,9 +30,11 @@ From here, you can either do some shopping, update item information, place resto
 
 # Our REST API
 
-Our Postman API is also included on our github - open the `RealbeastAPI.postman_collection.json` file in Postman, and you are set!
+Our Postman API is also included on our github - open the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
 
 The documentation for everything involved with that is accessible through Postman. 
+
+All you need to do is boot up the local server as instructed above, and all of the requests in it should work flawlessly. :tada:
 
 # To do list (web interface)
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
