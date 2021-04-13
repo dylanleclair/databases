@@ -23,7 +23,7 @@ from mysite import api as myapi
 # Routers provide an easy way of automatically determining the URL conf.
 router = myapi.DocumentedRouter()
 #router.register(r'profiles', ProfileViewSet)
-router.register(r'users', UserViewSet)
+#router.register(r'users', UserViewSet)
 router.register(r'profiles', ProfileViewSet)
 router.register(r'stores', StoreViewSet)
 router.register(r'customers', CustomerViewSet)
@@ -38,4 +38,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')), # adding login functionality!
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/lol/', UserAPIView.as_view(), name="lol")
 ]
