@@ -52,20 +52,35 @@ def product_page(request, product_id):
     product = Product.objects.filter(id=product_id)[0];
     template = loader.get_template('realbeast/product.html')
     sizes = Size.objects.filter(product_id=product.id)
-    stores_list = []
+    stores_list = [] # location, size and quantity IN STORES
+    
+    online_list = [] # location, size and quantity ONLINE
+
+    sizes_online = [] # S, M, L, XL, ...
     for size in sizes:
-        print(size.store_id.location)
-        stores_list.append({
-            'location': size.store_id.location,
-            'size': size.size,
-            'quantity' : size.quantity,       
-        })
+        #print(size.store_id.location)
+        size_obj = {
+                'location': size.store_id.location,
+                'size': size.size,
+                'quantity' : size.quantity,       
+            }
+        if size.store_id.location == 'Online':
+            # add online sizes
+            sizes_online.append(size.size)
+            online_list.append(size_obj)
+            
+        else: 
+            stores_list.append(size_obj)
+
+    available_online =len(online_list) > 0
     instock = len(stores_list) > 0
     context = {
         'product':product,
         'stores':stores_list,
         'instock':instock,
-        
+        'online':available_online,
+        'online_list': online_list,
+        'sizes_online':sizes_online,
     }
     return HttpResponse(template.render(context, request));
 

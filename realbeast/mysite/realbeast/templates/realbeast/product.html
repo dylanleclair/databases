@@ -6,13 +6,11 @@
 
 {% block style %}
 <style>
-  
-  
   #product-img {
-    width:100%;
-    
+    width: 100%;
+
   }
-  
+
 
   #product {
     padding-top: 35px;
@@ -21,27 +19,27 @@
     justify-content: center;
     align-items: center;
   }
-  
+
   #product-main {
-    width :60%;
+    width: 60%;
     display: grid;
     grid-template-areas:
       "title title"
       "image content"
       "caption caption";
     grid-template-columns: 70% 30%;
-    
+
   }
-  
+
   #product figcaption {
     font-family: var(--monospace);
     font-size: 0.7rem;
   }
-  
+
   #product-text {
     grid-area: content;
     justify-self: start;
-    text-align:left;
+    text-align: left;
     width: 100%;
     font-family: var(--monospace);
     font-size: 0.8rem;
@@ -51,36 +49,41 @@
     justify-content: start;
     align-items: start;*/
   }
+
   #product-text #price {
     font-size: 1.5rem;
   }
+
   #product-title {
     grid-area: title;
     font-family: Overpass;
   }
+
   #product-sizes {
     width: 100%;
     justify-content: center;
     align-items: center;
   }
+
   table {
     font-size: 1.2rem;
     width: 60%;
     border: 1px solid black;
     text-align: center;
-    margin:auto;
-    margin-top:1.2rem;
-    margin-bottom:1.2rem;
+    margin: auto;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
 
   }
 
   th {
     font-family: Overpass;
     border: 1px solid black;
-    margin-top:1.2rem;
-    margin-bottom:1.2rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
 
   }
+
   td {
     font-family: var(--monospace);
     border: 1px solid black;
@@ -95,6 +98,7 @@
     justify-content: center;
     font-family: Overpass;
   }
+
   #out-of-stock img {
     width: 2.5rem;
     margin-right: 0.5rem;
@@ -105,87 +109,121 @@
     grid-area: content;
     display: flex;
     flex-direction: row;
-    width:80%;
+    width: 80%;
     flex-wrap: nowrap;
-    justify-content:center;
+    justify-content: center;
   }
 
   #quantity {
-    width:30%;
-    padding:11px;
-  }
-  #submit{
-    width:50%;
-    padding:10px;
+    width: 30%;
+    padding: 11px;
   }
 
+  #submit {
+    width: 50%;
+    padding: 10px;
+  }
 </style>
 {% endblock %}
 {% block content %}
 <section id="product">
-    <div id="product-main">
+  <div id="product-main">
     <h1 id="product-title">{{product.name}}</h1>
-      <figure>    
-        <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}"/>
-        <figcaption>{{product.caption}}</figcaption>
-        
-      </figure>
+    <figure>
+      <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" />
+      <figcaption>{{product.caption}}</figcaption>
+
+    </figure>
 
     <div id="product-text">
       <!-- form for sizing-->
       <p id="price">${{product.price}}</p>
-      
+
       <p>{{product.description}}</p>
 
-      {% if instock %} <!--change to check if in stock online -->
+      {% if online %}
+      <!--change to check if in stock online -->
       <form class="form-group" action="{% url 'realbeast:add_to_cart' product.id %}"" method='post'>
         {% csrf_token %}
-        <!-- only need a submit! -->
-        <input type="number" id="quantity" name="quantity"max="99" min="1" required value="1">
-        <!-- add a size field -->
+        <!-- size selection field -->
+        <div id=" size-buttons">
+          {% for size in sizes_online %}
+          <label><input type="radio" id="size" name="size">{{size}}</label>
+          {% endfor %}
+        </div>
 
-        <!-- 
-        <label> <radio checked></radio></label>
-        -->
+        
+    <!-- quantity selection field -->
+    <input type="number" id="quantity" name="quantity" max="99" min="1" required value="1">
 
-        <!-- Add a color field -->
-
-        <!-- maybe add a quantity field?-->
-        <input type="submit" id="submit"  value="Add to Cart">
-      </form>
-      {% endif %}
-     </div>
-    </div>
-  </section>
-
-  <section id="product-sizes">
-
-    <!-- we want to have: each store's amount of the product in each size-->
-    {% if instock %}
-    <table>
-      <tr>
-        <th>Store</th>
-        <th>Size</th>
-        <th>Quantity</th>
-      </tr>
-      {% for store in stores %}
-        <!-- each store that carries it, along with the amount/sizes they have-->
-      <tr>
-       <td>{{store.location}}</td>
-       <td>{{store.quantity}}</td>
-       <td>{{store.size}}</td>
-      </tr>
-      {% endfor %}
-
-    </table>
-    {% else %}
-    <div id="out-of-stock">
-      <img src="{% static 'realbeast/icons/warning.svg' %}">
-      <h2>Currently out of stock.</h2>
-    </div>
-
+    <!-- submit button-->
+    <input type="submit" id="submit" value="Add to Cart">
+    </form>
     {% endif %}
-  </section>
+  </div>
+  </div>
+</section>
+
+<section id="product-sizes">
+
+  <!-- we want to have: the sizes of the product and their quantities at online center-->
+  {% if online %}
+  <table>
+    <div id="out-of-stock">
+      <img src="{% static 'realbeast/icons/check.svg' %}">
+      <h2>Currently in stock online.</h2>
+    </div>
+    <tr>
+      <th>Store</th>
+      <th>Size</th>
+      <th>Quantity</th>
+    </tr>
+    {% for store in online_list %}
+    <!-- each store that carries it, along with the amount/sizes they have-->
+    <tr>
+      <td>{{store.location}}</td>
+      <td>{{store.quantity}}</td>
+      <td>{{store.size}}</td>
+    </tr>
+    {% endfor %}
+
+  </table>
+  {% else %}
+  <div id="out-of-stock">
+    <img src="{% static 'realbeast/icons/warning.svg' %}">
+    <h2>Currently out of stock online.</h2>
+  </div>
+  {% endif %}
+
+  {% if instock %}
+  <div id="out-of-stock">
+    <img src="{% static 'realbeast/icons/check.svg' %}">
+    <h2>In stock at these stores:</h2>
+  </div>
+  <table>
+    <tr>
+      <th>Store</th>
+      <th>Size</th>
+      <th>Quantity</th>
+    </tr>
+    {% for store in stores %}
+    <!-- each store that carries it, along with the amount/sizes they have-->
+    <tr>
+      <td>{{store.location}}</td>
+      <td>{{store.quantity}}</td>
+      <td>{{store.size}}</td>
+    </tr>
+    {% endfor %}
+
+  </table>
+  {% else %}
+  <div id="out-of-stock">
+    <img src="{% static 'realbeast/icons/warning.svg' %}">
+    <h2>Currently out of stock in our stores.</h2>
+  </div>
+
+  {% endif %}
+</section>
 
   <!-- if user is authenticated, add an 'edit' button so that products editable by staff-->
   {% if user.is_staff %}
