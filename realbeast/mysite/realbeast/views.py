@@ -403,7 +403,11 @@ class ProductAPIView (APIView):
 
 class OrderAPIView(APIView):
     '''
-    API endpoint for managing orders
+    API endpoint for managing orders - make this user based
+
+    Customers can do everything listed in API
+
+    Add extra endpoint for staff to make restock orders
     '''
 
 
