@@ -68,11 +68,7 @@ class BrandSerializer(serializers.ModelSerializer):
         model = Brand
         fields = ['brand']
 
-class SizeSerializer(serializers.ModelSerializer):
-    #store_id = StoreSerializer()
-    class Meta:
-        model = Size
-        fields = ['size', 'quantity']
+
 
 class SizeSerializerWithStore(serializers.ModelSerializer):
     store_id = StoreSerializer()
@@ -90,30 +86,33 @@ class ProductColorSerializer(serializers.ModelSerializer):
         model = Color
         fields = ['color']
 
+
+
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    brands = BrandSerializer(many=True,read_only=True)
+    product_type = ProductTypeSerializer(many=True,read_only=True)
+    colors = ProductColorSerializer(many=True,read_only=True)
+    class Meta:
+        model = Product
+        fields = ['id','price', 'sex', 'name', 'description','caption', 'brands','product_type','colors'] 
+
+
+class SizeSerializer(serializers.ModelSerializer):
+    #store_id = StoreSerializer()
+    class Meta:
+        model = Size
+        fields = ['size', 'quantity']
+
 '''
 A variation of the product serializer that focuses on the store
 '''
 class ProductStoreSerializer(serializers.ModelSerializer):
-    brands = BrandSerializer(many=True,read_only=True)
     sizes = SizeSerializer(many=True,read_only=True)
-    product_type = ProductTypeSerializer(many=True,read_only=True)
-    colors = ProductColorSerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ['price', 'sex', 'name', 'description', 'brands', 'sizes','product_type','colors'] 
-
-'''
-A variation of the product serializer that is focused on the product
-'''
-class ProductSerializer(serializers.ModelSerializer):
-    brands = BrandSerializer(many=True,read_only=True)
-    sizes = SizeSerializerWithStore(many=True,read_only=True)
-    product_type = ProductTypeSerializer(many=True,read_only=True)
-    colors = ProductColorSerializer(many=True,read_only=True)
-    class Meta:
-        model = Product
-        fields = ['price', 'sex', 'name', 'description', 'brands', 'sizes','product_type','colors'] 
-
+        fields = ['id','price', 'sex', 'name', 'description','sizes'] 
 
 
 class OrderSerializer(serializers.ModelSerializer):

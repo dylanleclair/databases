@@ -6,7 +6,7 @@ from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
-from .serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProductStoreSerializer,ProfileSerializer, StoreSerializer, UserSerializer
+from .serializers import SizeSerializer, BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProductStoreSerializer,ProfileSerializer, StoreSerializer, UserSerializer
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -356,11 +356,11 @@ class UserAPIView(APIView):
             status=status.HTTP_200_OK
         )
 
-# this is an interface for editing products at a specific store
-# i felt this would be more useful, since it is unlikely all stores will be updated at same time
-class ProductStoreAPIView (APIView):
+# List view for all products at a given store
+# Example url: http://127.0.0.1:8000/api/products/Online/
+class ProductStoreList (APIView):
     '''
-    Allows product data to be updated and maintained. Supports CRUD, in addition to some queries. 
+    Lists product sizing and quantity data, by store. 
     '''
     permission_classes = [permissions.IsAuthenticated]
 
@@ -371,17 +371,137 @@ class ProductStoreAPIView (APIView):
         
         #store = Size.objects.get(store_id__id=store_id)
         #find the sizings and quantities of a product 
-        sizings = Size.objects.filter(store_id__location=location) 
-        products = [item.product_id for item in sizings]
+        sizings = Size.objects.filter(store_id__location=location).values('product_id').distinct()
+        products = [Product.objects.get(pk=item['product_id']) for item in sizings]
         if not sizings:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = ProductStoreSerializer(products,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+# Detail view for a specific product at a given store
+# Example url: http://127.0.0.1:8000/api/products/Online/2
+class ProductStoreDetail(APIView):
+    '''
+    Provides CRUD access to product sizing and quantity data, by store. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
     # create a get that takes store and product id as a parameter
+    def get(self,request,location, product_id, *args, **kwargs):
+        '''
+        List product information for a given store
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id) 
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SizeSerializer(sizings,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-# general product management class -- maybe deprecate & just keep store-based model
-class ProductAPIView (APIView):
+
+    # update size information
+    def put (self,request,location,product_id, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        sizing = Size.objects.get(product_id__id=product_id, store_id__location=location)
+        product = sizing.product_id
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            # only the sizes are specific to a given store!
+            'product' : product, 
+            'sizes': request.data.get('sizes'), # a JSON array of sizes
+        }
+        serializer = ProductStoreSerializer(instance=product, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post (self,request,location,product_id, *args,**kwargs):
+        '''
+        Adds an already existing product to the store, with sizes specific to the store being modified.
+
+        To create a new product, see the Product API
+        '''
+        sizing = Size(product_id__id=product_id, store_id__location=location)
+        data = {
+            'sizes':request.data.get('sizes'), # the json array of sizes
+        }
+        serializer = ProductStoreSerializer(instance=product, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def delete(self,request,location,product_id,*args,**kwargs):
+        '''
+        Removes the product from the store
+        '''
+        sizing = Size.objects.get(product_id__id=product_id, store_id__location=location)
+        if not sizing:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        sizing.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
+class ProductList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    A list of all products across all stores, this API endpoint is used to alter data about a product
+    
+    This includes:
+        - brands
+        - product type
+        - colors
+        - description
+        - sex
+        - price
+    '''
+    def get(self,request, *args, **kwargs):
+        '''
+        List product information
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product  
+        products = Product.objects.all()
+        if not products:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(products,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+   
+    # update a product's information
+    def put (self,request,product_id, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        product = Product.objects.get(pk=product_id)
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            'price':request.data.get('price'),
+            'sex':request.data.get('sex'),
+            'name':request.data.get('name'),
+            'description':request.data.get('description'),
+            'caption':request.data.get('caption'),
+            'brands':request.data.get('brands'),
+            'product_type':request.data.get('product_type'),
+            'colors':request.data.get('colors'),
+        }
+        serializer = ProductSerializer(instance=product, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# general product management class -- this allows for product data (shared amongst all stores) to be updated
+class ProductDetail (APIView):
     '''
     Allows product data to be updated and maintained. Supports CRUD, in addition to some queries. 
     '''
@@ -399,6 +519,28 @@ class ProductAPIView (APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = ProductSerializer(products,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put (self,request,location,product_id, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        sizing = Size.objects.get(product_id__id=product_id, store_id__location=location)
+        product = sizing.product_id
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            # only the sizes are specific to a given store!
+            'product' : product, 
+            'brands':request.data.get('brands'), # a JSON array of brands
+            'sizes': request.data.get('sizes'), # a JSON array of sizes
+            'product_type':request.data.get('product_type'), # a JSON array of product types
+            'colors':request.data.get('colors'), # a JSON array of colors
+        }
+        serializer = ProductStoreSerializer(instance=product, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderAPIView(APIView):
