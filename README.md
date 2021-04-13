@@ -1,5 +1,6 @@
 # databases
-databases project for school
+
+The term project for CPSC 471, the database management systems course at UofC. 
 
 This project uses a SQLite database so that we can coordinate it with the repo of the project. 
 
@@ -7,7 +8,7 @@ If you are completely new to Django / Web Dev, I would recommend following the t
 
 Otherwise, there is a vast amount of inline documentation. 
 
-# Quickstart guide
+# Quickstart guide :rocket:
 
 ## Install some dependencies
 
@@ -22,9 +23,7 @@ To run the server locally, navigate to `realbeast/mysite` folder from the top re
 
 `python manage.py runserver`
 
-Then, you can open up http://127.0.0.1:8000/ in your browser - welcome to our website!
-
-A browsable API is available at http://127.0.0.1:8000/api
+Then, you can open up http://127.0.0.1:8000/ in your browser - welcome to our website! :rocket:
 
 ## Using the quickstart
 
@@ -37,7 +36,9 @@ Sign into admin by navigating to the login page, enter:
 
 From here, you can either do some shopping, update item information, place restock orders and more. 
 
-# Our REST API
+If you instead want the experience from a customer's point of view, register at the bottom of the homepage. 
+
+# Our REST API :whale2:
 
 Our Postman API is also included on our github - open the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
 
@@ -45,7 +46,7 @@ The documentation for everything involved with that is accessible through Postma
 
 All you need to do is boot up the local server as instructed above, and all of the requests in it should work flawlessly. :tada:
 
-# To do list (web interface)
+# To do list (web interface) :zap:
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
 - add user registration, sign in and account management pages :heavy_check_mark:
 - add store page and product view pages :heavy_check_mark:
