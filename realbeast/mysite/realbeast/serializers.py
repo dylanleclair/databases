@@ -68,14 +68,6 @@ class BrandSerializer(serializers.ModelSerializer):
         model = Brand
         fields = ['brand']
 
-
-
-class SizeSerializerWithStore(serializers.ModelSerializer):
-    store_id = StoreSerializer()
-    class Meta:
-        model = Size
-        fields = ['store_id','size', 'quantity']
-
 class ProductTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductType
@@ -91,13 +83,105 @@ class ProductColorSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    brands = BrandSerializer(many=True,read_only=True)
-    product_type = ProductTypeSerializer(many=True,read_only=True)
-    colors = ProductColorSerializer(many=True,read_only=True)
+    brands = BrandSerializer(many=True)
+    product_types = ProductTypeSerializer(many=True)
+    colors = ProductColorSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id','price', 'sex', 'name', 'description','caption', 'brands','product_type','colors'] 
+        fields = ['id','price', 'sex', 'name', 'description','caption','img_name', 'brands','product_types','colors'] 
 
+    def create(self, validated_data):
+        # update product information
+        price = validated_data.get('price', None)
+        sex = validated_data.get('sex', None)
+        name = validated_data.get('name', None)
+        img_name = validated_data.get('img_name', None)
+        description = validated_data.get('description', None)
+        caption = validated_data.get('caption', None)
+        instance = Product.objects.create(price=price, sex=sex,name=name,img_name=img_name,description=description,caption=caption)
+        instance.save()
+        # support for nested fields (brand, colors, product type)
+        brand_data = validated_data.pop('brands')
+        color_data = validated_data.pop('colors') 
+        type_data = validated_data.pop('product_types')
+    
+        for item in Brand.objects.filter(product_id=instance):
+            item.delete()
+        for item in Color.objects.filter(product_id=instance):
+            item.delete()
+        for item in ProductType.objects.filter(product_id=instance):
+            item.delete()
+        # Update brands
+        for brand in brand_data:
+            name = brand.get('brand', None)
+            if name:
+                # check if exists in database
+                if not Brand.objects.filter(product_id=instance, brand=name):
+                    Brand.objects.create(product_id=instance, brand=name)
+        
+        # Update color
+        for color in color_data:
+            name = color.get('color', None)
+            if name:
+                if not Color.objects.filter(product_id=instance,color=name):
+                    Color.objects.create(product_id=instance, color=name)
+        
+        # Update type
+        for t in type_data:
+            name = t.get('product_type', None)
+            if name:
+                if not ProductType.objects.filter(product_id=instance,product_type=name):
+                    ProductType.objects.create(product_id=instance, product_type=name)
+        
+        return instance
+        
+    # code for updating a product
+    def update(self, instance, validated_data):
+
+        # support for nested fields (brand, colors, product type)
+        brand_data = validated_data.pop('brands')
+        color_data = validated_data.pop('colors') 
+        type_data = validated_data.pop('product_types')
+    
+        for item in Brand.objects.filter(product_id=instance):
+            item.delete()
+        for item in Color.objects.filter(product_id=instance):
+            item.delete()
+        for item in ProductType.objects.filter(product_id=instance):
+            item.delete()
+        # Update brands
+        for brand in brand_data:
+            name = brand.get('brand', None)
+            if name:
+                # check if exists in database
+                if not Brand.objects.filter(product_id=instance, brand=name):
+                    Brand.objects.create(product_id=instance, brand=name)
+        
+        # Update color
+        for color in color_data:
+            name = color.get('color', None)
+            if name:
+                if not Color.objects.filter(product_id=instance,color=name):
+                    Color.objects.create(product_id=instance, color=name)
+        
+        # Update type
+        for t in type_data:
+            name = t.get('product_type', None)
+            if name:
+                if not ProductType.objects.filter(product_id=instance,product_type=name):
+                    ProductType.objects.create(product_id=instance, product_type=name)
+        
+
+        # update product information
+        instance.price = validated_data.get('price', instance.price)
+        instance.sex = validated_data.get('sex', instance.sex)
+        instance.name = validated_data.get('name', instance.name)
+        instance.img_name = validated_data.get('img_name', instance.img_name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.caption = validated_data.get('caption', instance.caption)
+        instance.save()
+
+        return instance
 
 class SizeSerializer(serializers.ModelSerializer):
     #store_id = StoreSerializer()
@@ -112,7 +196,7 @@ class ProductStoreSerializer(serializers.ModelSerializer):
     sizes = SizeSerializer(many=True,read_only=True)
     class Meta:
         model = Product
-        fields = ['id','price', 'sex', 'name', 'description','sizes'] 
+        fields = ['id','price', 'sex', 'name','sizes'] 
 
 
 class OrderSerializer(serializers.ModelSerializer):

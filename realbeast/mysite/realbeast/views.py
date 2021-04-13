@@ -391,8 +391,6 @@ class ProductStoreDetail(APIView):
         List product information for a given store
         '''
         
-        #store = Size.objects.get(store_id__id=store_id)
-        #find the sizings and quantities of a product 
         sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id) 
         if not sizings:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -405,19 +403,7 @@ class ProductStoreDetail(APIView):
         '''
         Updates the specified product, if it exists
         '''
-        sizing = Size.objects.get(product_id__id=product_id, store_id__location=location)
-        product = sizing.product_id
-        if not product:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        data = {
-            # only the sizes are specific to a given store!
-            'product' : product, 
-            'sizes': request.data.get('sizes'), # a JSON array of sizes
-        }
-        serializer = ProductStoreSerializer(instance=product, data=data,partial=True )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        sizes = request.data.get('sizes')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post (self,request,location,product_id, *args,**kwargs):
@@ -440,7 +426,7 @@ class ProductStoreDetail(APIView):
         '''
         Removes the product from the store
         '''
-        sizing = Size.objects.get(product_id__id=product_id, store_id__location=location)
+        sizing = Size.objects.filter(product_id__id=product_id, store_id__location=location)
         if not sizing:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         sizing.delete()
@@ -475,26 +461,22 @@ class ProductList(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = ProductSerializer(products,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
-   
-    # update a product's information
-    def put (self,request,product_id, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         '''
-        Updates the specified product, if it exists
+        Create a product with given product data
         '''
-        product = Product.objects.get(pk=product_id)
-        if not product:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
         data = {
-            'price':request.data.get('price'),
-            'sex':request.data.get('sex'),
-            'name':request.data.get('name'),
-            'description':request.data.get('description'),
-            'caption':request.data.get('caption'),
-            'brands':request.data.get('brands'),
-            'product_type':request.data.get('product_type'),
-            'colors':request.data.get('colors'),
+            'price' : request.data.get('price'), 
+            'sex' : request.data.get('sex'), 
+            'name' : request.data.get('name'), 
+            'description' : request.data.get('description'), 
+            'caption' : request.data.get('caption'), 
+            'img_name' : request.data.get('img_name'),
+            'brands':request.data.get('brands'), # a JSON array of brands
+            'product_types':request.data.get('product_types'), # a JSON array of product types
+            'colors':request.data.get('colors'), # a JSON array of colors
         }
-        serializer = ProductSerializer(instance=product, data=data,partial=True )
+        serializer = ProductSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -507,42 +489,53 @@ class ProductDetail (APIView):
     '''
     permission_classes = [permissions.IsAuthenticated]
 
+    # Retreives a product
     def get(self,request,product_id, *args, **kwargs):
         '''
         List product information for a given product
         '''
-        #store = Size.objects.get(store_id__id=store_id)
-        #find the sizings and quantities of a product 
-        sizings = Size.objects.filter(product_id__id=product_id) 
-        products = [item.product_id for item in sizings]
-        if not sizings:
+        product = Product.objects.get(pk=product_id)
+        if not product:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = ProductSerializer(products,many=True, context={'request':request})
+        serializer = ProductSerializer(product, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put (self,request,location,product_id, *args, **kwargs):
+    # Updates a product
+    def put (self,request,product_id, *args, **kwargs):
         '''
         Updates the specified product, if it exists
         '''
-        sizing = Size.objects.get(product_id__id=product_id, store_id__location=location)
-        product = sizing.product_id
+        product = Product.objects.get(pk=product_id)
         if not product:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         data = {
             # only the sizes are specific to a given store!
-            'product' : product, 
+            'price' : request.data.get('price'), 
+            'sex' : request.data.get('sex'), 
+            'name' : request.data.get('name'), 
+            'description' : request.data.get('description'), 
+            'caption' : request.data.get('caption'), 
             'brands':request.data.get('brands'), # a JSON array of brands
-            'sizes': request.data.get('sizes'), # a JSON array of sizes
-            'product_type':request.data.get('product_type'), # a JSON array of product types
+            'product_types':request.data.get('product_types'), # a JSON array of product types
             'colors':request.data.get('colors'), # a JSON array of colors
         }
-        serializer = ProductStoreSerializer(instance=product, data=data,partial=True )
+        serializer = ProductSerializer(instance=product, data=data,partial=True )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    # Deletes a product
+    def delete(self, request, product_id, *args, **kwargs):
+        product = Product.objects.get(pk=product_id)
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        product.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+        
 class OrderAPIView(APIView):
     '''
     API endpoint for managing orders - make this user based

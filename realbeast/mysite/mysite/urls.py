@@ -43,5 +43,6 @@ urlpatterns = [
     path('api/sizes/<str:location>/<int:product_id>', ProductStoreDetail.as_view(), name="products"),
     path('api/stores/<str:location>/', StoreAPIView.as_view(), name="store"),
     path('api/stores/', StoreAPIView.as_view(), name="stores"),
-    path('api/products/', ProductList.as_view(), name='products')
+    path('api/products/', ProductList.as_view(), name='products'),
+    path('api/products/<int:product_id>/', ProductDetail.as_view(), name='products')
 ]
