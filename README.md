@@ -28,6 +28,11 @@ Sign into admin by navigating to the login page, enter:
 
 From here, you can either do some shopping, update item information, place restock orders and more. 
 
+# Our REST API
+
+Our Postman API is also included on our github - open the `RealbeastAPI.postman_collection.json` file in Postman, and you are set!
+
+The documentation for everything involved with that is accessible through Postman. 
 
 # To do list (web interface)
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
@@ -37,18 +42,6 @@ From here, you can either do some shopping, update item information, place resto
 - added skeleton for updating product information (quantities, description, titles, etc) :arrows_counterclockwise:
 - implement Django REST to get desired API functionality (see endpoints) :arrows_counterclockwise:
 
-# Our REST API
-
-Our API can be accessed through HTML or through Postman. 
-
-To modify data in postman, you will have to add basic authentication. 
-
-A sample user you may use is: 
-
-Username: `stellaellaolla`
-Password: `12345`
-
-Documentation for our REST API can be found at localhost:8000/api.
 
 #### Notes to self (django stuff)
 
