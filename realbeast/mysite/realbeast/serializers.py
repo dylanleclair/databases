@@ -22,6 +22,12 @@ class StoreSerializer(serializers.ModelSerializer):
         model = Store
         fields = ['location', 'owner_id']
 
+class SimpleStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ['location']
+
+
 '''
 Is the main serialization class for users - combines UserSerializer and Profile serializer into one. 
 '''
@@ -80,8 +86,10 @@ class ProductColorSerializer(serializers.ModelSerializer):
         fields = ['color']
 
 
-
-
+class SimpleProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'sex', 'name'] 
 
 class ProductSerializer(serializers.ModelSerializer):
     brands = BrandSerializer(many=True)
@@ -186,11 +194,42 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class SizeSerializer(serializers.ModelSerializer):
-    #store_id = store_id.location
+    store_id = SimpleStoreSerializer()
+    product_id = SimpleProductSerializer()
     class Meta:
         model = Size
-        fields = ['store_id','size', 'quantity']
+        fields = ['store_id','product_id','size', 'quantity']
 
+
+    def create(self, validated_data):
+        # update product information
+
+        product = validated_data.get('product_id', None) # see simple product serializer
+        store = validated_data.get('store_id', None) # see simple store serializer
+        size = validated_data.get('size',None)
+        quantity = validated_data.get('quantity', None)
+        
+        instance = Size.objects.create(product_id=product, store_id=store, size=size, quantity=quantity)
+        instance.save()
+        # support for nested fields (brand, colors, product type)
+        brand_data = validated_data.pop('brands')
+        color_data = validated_data.pop('colors') 
+        type_data = validated_data.pop('product_types')
+
+        return instance
+   # code for updating a product
+    def update(self, instance, validated_data):
+
+        # update product information
+        instance.price = validated_data.get('price', instance.price)
+        instance.sex = validated_data.get('sex', instance.sex)
+        instance.name = validated_data.get('name', instance.name)
+        instance.img_name = validated_data.get('img_name', instance.img_name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.caption = validated_data.get('caption', instance.caption)
+        instance.save()
+
+        return instance
 '''
 A variation of the product serializer that focuses on the store
 '''
@@ -208,5 +247,8 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['total_price','order_date','delivery_date','delivery_status','is_restock','rewards_earned', 'user_id', 'store_id']
 
-
-
+class ContainsSerializer(serializers.ModelSerializer):
+    product_id = ProductStoreSerializer()
+    class Meta:
+        model = Contains
+        fields=['quantity','size']

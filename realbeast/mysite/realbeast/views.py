@@ -6,7 +6,7 @@ from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
-from .serializers import SizeSerializer, BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProductStoreSerializer,ProfileSerializer, StoreSerializer, UserSerializer
+from .serializers import *
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -362,9 +362,35 @@ class UserAPIView(APIView):
 #=========================================================
 # Inventory API section
 #=========================================================
+
+class SizeList(APIView):
+    '''
+    Contains all entries of sizes
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self,request, *args, **kwargs):
+        sizings = Size.objects.all()
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SizeSerializer(sizings,many=True,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class StoreSizeList(APIView):
+    '''
+    Contains size entries by store
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self,request,location, *args, **kwargs):
+        sizings = Size.objects.filter(store_id__location=location)
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SizeSerializer(sizings,many=True,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 # Detail view for a specific product at a given store
 # Example url: http://127.0.0.1:8000/api/products/Online/2
-class StoreSizeDetail(APIView):
+class StoreSizeProductDetail(APIView):
     '''
     Provides CRUD access to product sizing and quantity data, by store. 
     '''
@@ -381,36 +407,58 @@ class StoreSizeDetail(APIView):
         serializer = SizeSerializer(sizings,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def post(self, request, *args, **kwargs):
+        '''
+        Add a product to the stock of a store
+        '''
+        
+        location = request.data.get('location')
+        product = request.data.get('product_id')
 
+        if location == None or product == None:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+        location_data = Store.objects.get(location=location)
+        product_data = Product.objects.get(product_id=product)
+        
+        data = {
+            'location' : location_data, 
+            'product_id' : product_data, 
+            'size':request.data.get('size'), 
+            'quantity':request.data.get('quantity'), 
+        }
+        serializer = SizeSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class StoreSizeEntryDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    Individual size entries are accessed through this endpoint.
+    '''
     # update size information
-    def put (self,request,location,product_id, *args, **kwargs):
+    def get (self,request,location,product_id,size, *args, **kwargs):
         '''
         Updates the specified product, if it exists
         '''
-        sizes = request.data.get('sizes')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def post (self,request,location,product_id, *args,**kwargs):
-        '''
-        Adds an already existing product to the store, with sizes specific to the store being modified.
-
-        To create a new product, see the Product API
-        '''
-        sizing = Size(product_id__id=product_id, store_id__location=location)
-        data = {
-            'sizes':request.data.get('sizes'), # the json array of sizes
-        }
-        serializer = ProductStoreSerializer(instance=product, data=data,partial=True )
-        if serializer.is_valid():
-            serializer.save()
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id, size=size) 
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SizeSerializer(sizings,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-    def delete(self,request,location,product_id,*args,**kwargs):
+
+    def delete(self,request,location,product_id,size,*args,**kwargs):
         '''
         Removes the product from the store
         '''
-        sizing = Size.objects.filter(product_id__id=product_id, store_id__location=location)
+        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id, size=size) 
         if not sizing:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         sizing.delete()

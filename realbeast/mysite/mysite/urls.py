@@ -39,7 +39,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')), # adding login functionality!
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/user/', UserAPIView.as_view(), name="user"),
-    path('api/sizes/<str:location>/<int:product_id>', StoreSizeDetail.as_view(), name="products"),
+    path('api/sizes/<str:location>/<int:product_id>/', StoreSizeProductDetail.as_view(), name="products"),
+    path('api/sizes/<str:location>/<int:product_id>/<str:size>/', StoreSizeEntryDetail.as_view(), name="products"),
+    path('api/sizes/', SizeList.as_view(), name="sizes"),
+    path('api/sizes/<str:location>', StoreSizeList.as_view(), name="sizes"),
     path('api/stores/', StoreList.as_view(), name="stores"),
     path('api/stores/<str:location>/', StoreDetail.as_view(), name="store"),
     path('api/products/', ProductList.as_view(), name='products'),
