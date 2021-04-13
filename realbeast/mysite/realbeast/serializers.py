@@ -12,7 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         # the api representation will have each of the fields above returned!
         # our api supports authentication
 
-
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -60,6 +59,8 @@ class CustomerSerializer(serializers.ModelSerializer):
         profile.user_type = profile_data.get('user_type', profile.user_type)
 
         profile.save()
+
+        # create a cart for the new user!
 
         return instance
 
@@ -134,7 +135,7 @@ class ProductSerializer(serializers.ModelSerializer):
                     ProductType.objects.create(product_id=instance, product_type=name)
         
         return instance
-        
+
     # code for updating a product
     def update(self, instance, validated_data):
 
@@ -183,11 +184,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class SizeSerializer(serializers.ModelSerializer):
-    #store_id = StoreSerializer()
+    #store_id = store_id.location
     class Meta:
         model = Size
-        fields = ['size', 'quantity']
+        fields = ['store_id','size', 'quantity']
 
 '''
 A variation of the product serializer that focuses on the store

@@ -254,7 +254,9 @@ def cart(request):
 
 # API VIEWS
 
-
+#=========================================================
+# User API section
+#=========================================================
 from rest_framework.decorators import action
 from rest_framework.response import Response
 # https://stackoverflow.com/questions/25151586/django-rest-framework-retrieving-object-count-from-a-model
@@ -356,31 +358,13 @@ class UserAPIView(APIView):
             status=status.HTTP_200_OK
         )
 
-# List view for all products at a given store
-# Example url: http://127.0.0.1:8000/api/products/Online/
-class ProductStoreList (APIView):
-    '''
-    Lists product sizing and quantity data, by store. 
-    '''
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self,request,location, *args, **kwargs):
-        '''
-        List product information for a given store
-        '''
-        
-        #store = Size.objects.get(store_id__id=store_id)
-        #find the sizings and quantities of a product 
-        sizings = Size.objects.filter(store_id__location=location).values('product_id').distinct()
-        products = [Product.objects.get(pk=item['product_id']) for item in sizings]
-        if not sizings:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = ProductStoreSerializer(products,many=True, context={'request':request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+#=========================================================
+# Inventory API section
+#=========================================================
 # Detail view for a specific product at a given store
 # Example url: http://127.0.0.1:8000/api/products/Online/2
-class ProductStoreDetail(APIView):
+class StoreSizeDetail(APIView):
     '''
     Provides CRUD access to product sizing and quantity data, by store. 
     '''
@@ -435,7 +419,9 @@ class ProductStoreDetail(APIView):
             status=status.HTTP_200_OK
         )
 
-
+#=========================================================
+# Product API section
+#=========================================================
 class ProductList(APIView):
     permission_classes = [permissions.IsAuthenticated]
     '''
@@ -482,6 +468,7 @@ class ProductList(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# path:  
 # general product management class -- this allows for product data (shared amongst all stores) to be updated
 class ProductDetail (APIView):
     '''
@@ -536,18 +523,36 @@ class ProductDetail (APIView):
             status=status.HTTP_200_OK
         )
         
-class OrderAPIView(APIView):
+
+#=========================================================
+# Store API section
+#=========================================================
+# path: 'api/stores/'
+class StoreList(APIView):    
     '''
-    API endpoint for managing orders - make this user based
-
-    Customers can do everything listed in API
-
-    Add extra endpoint for staff to make restock orders
+    Allows a specific store to be altered. Supports CRUD, in addition to some queries. 
     '''
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get(self,request, *args, **kwargs):
+        '''
+        List information for all stores
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        store = Store.objects.all() 
+        if not store:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(store,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-# Store API - implements store endpoints
-class StoreAPIView(APIView):    
+    # add post
+    #def post(self,request, *args, **kwargs):
+
+# path: 'api/stores/<str:location>/'
+# example: http://127.0.0.1:8000/api/stores/Chinook/
+class StoreDetail(APIView):    
     '''
     Allows a specific store to be altered. Supports CRUD, in addition to some queries. 
     '''
@@ -566,17 +571,55 @@ class StoreAPIView(APIView):
         serializer = StoreSerializer(store, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # add put, delete, etc.
+    #def post(self,request, location, *args, **kwargs):
+
+
+    def delete(self,request,location, *args, **kwargs):
+        location = Store.objects.get(location=location)
+        if not location:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        location.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
+#=========================================================
+# Order API section
+#=========================================================
+
+class AllOrderList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    A list of orders for all users - to be accessed by staff
+    '''
     def get(self,request, *args, **kwargs):
         '''
-        List information for all stores
+        List information for a given location
         '''
         
         #store = Size.objects.get(store_id__id=store_id)
         #find the sizings and quantities of a product 
-        store = Store.objects.all() 
-        if not store:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = StoreSerializer(store,many=True, context={'request':request})
+        orders = Order.objects.all().order_by('order_date')[:10]
+        serializer = OrderSerializer(orders,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # add post, put, delete, etc.
+
+class UserOrderList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    The authenticated user's own orders
+    '''
+
+    # Retreives a user's data
+    def get(self,request, *args, **kwargs):
+        usr = User.objects.get(id= request.user.id)
+        if not usr:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        orders= Order.objects.filter(user_id=usr).order_by('order_date')[:10]
+        serializer = OrderSerializer(orders,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+#class OrderDetail(APIView):

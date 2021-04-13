@@ -67,7 +67,7 @@ class Employee(models.Model):
 '''
 
 class Store(models.Model):
-    location = models.CharField(max_length=200)
+    location = models.CharField(max_length=200, primary_key=True)
     owner_id = models.ForeignKey(User,on_delete=models.CASCADE) 
     # I removed number of employees, since this can be found by querying works at. 
 
