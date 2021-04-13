@@ -3,9 +3,16 @@ databases project for school
 
 This project uses a SQLite database so that we can coordinate it with the repo of the project. 
 
-I recommend following the tutorial at the Django documentation to see how it all fits together. There is a good amount of inline documentation as well. 
+If you are completely new to Django / Web Dev, I would recommend following the tutorial at the Django documentation to see how it all fits together. There is a good amount of inline documentation as well. 
 
 # Quickstart guide
+
+## Install some dependencies
+
+To run our project, you will need Python - it was developed on Python 3.8. 
+
+- Install django: `python -m pip install Django` 
+- Install django REST framework: `pip install djangorestframework` and `pip install markdown`
 
 Clone this repository to your computer.
 
