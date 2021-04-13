@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from realbeast.models import *
 from rest_framework import serializers
 
+# Used by the REST API 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
