@@ -136,15 +136,6 @@
       <p id="price">${{product.price}}</p>
       
       <p>{{product.description}}</p>
-      <ul>
-        <li>Pullover hooded sweatshirt with kangaroo pocket</li>
-        <li>Ribbed side panels, cuffs, and hem</li>
-        <li>Front Logo graphic print</li>
-        <li>Regular fit.</li>
-        <li>Custom 100 Thieves Woven Label on the side seam</li>
-        <li>Pullover hooded sweatshirt with kangaroo pocket</li>
-        <li>Preshrunk to minimize shrinkage</li>
-      </ul>
 
       {% if instock %} <!--change to check if in stock online -->
       <form class="form-group" action="{% url 'realbeast:add_to_cart' product.id %}"" method='post'>
@@ -156,6 +147,8 @@
         <!-- 
         <label> <radio checked></radio></label>
         -->
+
+        <!-- Add a color field -->
 
         <!-- maybe add a quantity field?-->
         <input type="submit" id="submit"  value="Add to Cart">
@@ -193,5 +186,14 @@
 
     {% endif %}
   </section>
+
+  <!-- if user is authenticated, add an 'edit' button so that products editable by staff-->
+  {% if user.is_staff %}
+
+  <form>
+    <input type="submit" value="Edit">
+  </form>
+
+  {% endif %}
 
 {% endblock %}

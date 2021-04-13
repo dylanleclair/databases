@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
-from .models import User, Product, Store, Size, Order, Contains
+from .models import User, Product, Store, Size, Order, Contains, Brand, Profile, Color, ProductType
 from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from realbeast.serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, StoreSerializer, UserSerializer
-from realbeast.models import Brand, Profile
 from rest_framework import viewsets, generics
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -26,11 +25,24 @@ def index(request):
 def products(request):
 
     # get a list of products instead!
-    products = Product.objects.all()[:12];
+    products = Product.objects.all()[:12]
     template = loader.get_template('realbeast/products.html')
+
+    brands = Brand.objects.all()
+
+    sexes = ['M', 'F', 'U']
+
+    colors = Color.objects.all()
+
+    types = ProductType.objects.all() 
+
     context = {
         'products':products,
-    }
+        'brands':brands,
+        'sexes':sexes,
+        'types':types,
+        'colors':colors,
+        }
 
     return HttpResponse(template.render(context, request))
 
@@ -113,11 +125,19 @@ def add_to_cart(request, product_id):
         cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
         product = Product.objects.get(pk=product_id)
         quantity = request.POST['quantity']
+        # if the user already has item in cart, update quantity
+        item_set = Contains.objects.filter(order_id=cart, product_id=product)
+        if len(item_set) > 0:
+            item = item_set[0]
+            item.quantity += 1
+            item.save()
+            #Size.objects.get(product_id=product, store_id__location='Online')
+        else:
+        # else, add new entry to the cart
         # identify the product
-        item = Contains(order_id=cart,product_id=product,quantity=quantity)
-        item.save() # save to the database
-        
-        # TODO: if item already exists in cart, add to the quantity!
+            item = Contains(order_id=cart,product_id=product,quantity=quantity)
+            item.save() # save to the database
+    
         
         return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
 
@@ -132,6 +152,9 @@ def my_login(request):
     else:
         # Return an 'invalid login' error message.
         raise Http404("Invalid login")
+
+def apply_filters(request):
+    raise Http404("Not yet implemented")
 
 def cart(request):
     user = request.user # retreive the logged in user
@@ -152,6 +175,17 @@ def cart(request):
                 'quantity': quantity,
             }
         )
+
+
+    # CALCULATE THE TOTALS and include in context
+
+    # calculate subtotal
+
+    # calculate taxes
+
+    # calculate shipping (flat rate cuz ill wanna kms otherwise)
+
+    # grand total
 
     context = {
         'cart_items': cart_items,

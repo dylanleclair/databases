@@ -1,4 +1,3 @@
-
 <!-- Instead of duplicating a bunch of HTML, 
   we can simply extend other HTML files! -->
 {% extends 'realbeast/base.html' %}
@@ -11,43 +10,106 @@
 
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'realbeast/product_style.css' %}">
+<style>
+  h2 {
+    font-family: Overpass;
+    font-size: 1.2rem;
+  }
+
+  #filter-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .filter-section {
+    width: 80%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: var(--monospace);
+  }
+
+  .form-submit {
+    margin: 20px;
+  }
+  
+
+</style>
 {% endblock %}
 
 {% block content %}
 
-      <h1>Mens Apparel</h1>
-      <!--Add an area to enter filters -->
-      <p id="filters">filters: jersey, medium</p>
-    
-      <section id="product-listings">
-      
-        <!-- add links on each image to the item's page-->
-        
-        <!-- use a similar for-loop to what's in the old templates/realbeast/index.html to generate a grid item for it in the product-container using the format already laid out-->
+<h1>Mens Apparel</h1>
+<!--Add an area to enter filters -->
+<p id="filters">Select your filters.</p>
+<form id="filter-form" action="{% url 'realbeast:apply_filters' %}" method="post">
+  {% csrf_token %}
+  <div class="filter-section">
+    <div class="form-section">
+      <h2>Brands</h2>
+      <!-- Choose brands to search from -->
+      {% for brand in brands %}
+      <label><input id="filter" type="checkbox" name="brand_filter" value="{{ brand.brand }}">{{ brand.brand }}</label>
+      {% endfor %}
+    </div>
 
-        {% for product in products %}
-        <div id="product-container">
-          <figure>    
-            <figcaption id="product-title">{{ product.name }}</figcaption>
-            <a href="/realbeast/products/{{ product.id}}">
-              <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}"/>
-            </a>
-            </figure>
+    <div class="form-section">
+      <h2>Sexes</h2>
+      <!-- Choose sex to search from -->
+      {% for sex in sexes %}
+      <label><input id="filter" type="checkbox" name="sex_filter" value="{{ sex }}">{{ sex }}</label>
+      {% endfor %}
+    </div>
 
-          <div id="product-desc">
-            <!-- form for sizing-->
-            <p id="price">${{ product.price }}</p>
-            <p id="sizes"></p> <!-- add sizing options-->
-              <div id="cartbutton">
-                <button>Add To Cart</button> 
-              </div>
-           </div>
-        </div>
-        {% endfor %}
+    <div class="form-section">
+      <h2>Product Types</h2>
+      <!-- Choose product types to search from -->
+      {% for type in types %}
+      <label><input id="filter" type="checkbox" name="type_filter" value="{{ type.product_type }}">{{ type.product_type}}</label>
+      {% endfor %}
+    </div>
 
-    
-      </section>
-    
+    <div class="form-section">
+      <!-- Choose colours to search from -->
+      <h2>Colors</h2>
+      {% for color in colors %}
+      <label><input id="filter" type="checkbox" name="colour_filter" value="{{ color.color }}">{{ color.color }}</label>
+      {% endfor %}
+    </div>
+  </div>
+  <input id="submit" class="form-submit" type="submit" value="Apply">
+</form>
+
+
+<section id="product-listings">
+
+  <!-- add links on each image to the item's page-->
+
+  <!-- use a similar for-loop to what's in the old templates/realbeast/index.html to generate a grid item for it in the product-container using the format already laid out-->
+
+  {% for product in products %}
+  <div id="product-container">
+    <figure>
+      <figcaption id="product-title">{{ product.name }}</figcaption>
+      <a href="/realbeast/products/{{ product.id}}">
+        <img id="product-img" src="{% static ''%}realbeast/product_images/{{product.img_name}}" />
+      </a>
+    </figure>
+
+    <div id="product-desc">
+      <!-- form for sizing-->
+      <p id="price">${{ product.price }}</p>
+    </div>
+  </div>
+  {% endfor %}
+
+
+</section>
+
 {% endblock %}
 
 
@@ -65,6 +127,7 @@
 
 
 
-    
+
 </body>
+
 </html>

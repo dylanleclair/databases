@@ -19,6 +19,7 @@ urlpatterns = [
     path('cart/',views.cart, name='cart'),
     path('my_login/', views.my_login, name='my_login'),
     path('register/', views.register, name='register'),
+    path('apply_filters', views.apply_filters, name='apply_filters')
     # this code will:
     # match a path with /realbeast/<integer> (ex: localhost:8000/realbeast/1)
     # it will then call the function with the name 'detail' from the module views.detail (see views)
