@@ -3,7 +3,9 @@ databases project for school
 
 This project uses a SQLite database so that we can coordinate it with the repo of the project. 
 
-If you are completely new to Django / Web Dev, I would recommend following the tutorial at the Django documentation to see how it all fits together. There is a good amount of inline documentation as well. 
+If you are completely new to Django / Web Dev, I would recommend following the tutorial at the Django documentation to see how it all fits together. 
+
+Otherwise, there is a vast amount of inline documentation. 
 
 # Quickstart guide
 
