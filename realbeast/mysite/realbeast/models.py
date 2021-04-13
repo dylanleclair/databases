@@ -76,8 +76,8 @@ class WorksAt(models.Model):
 
 class Order(models.Model):
     total_price = models.DecimalField(default=0, max_digits=20, decimal_places=2, )
-    order_date = models.DateTimeField('date ordered')
-    delivery_date = models.DateField('expected delivery date')
+    order_date = models.DateTimeField(auto_now_add=True, blank=True,)
+    delivery_date = models.DateField(auto_now_add=True, blank=True,)
     delivery_status = models.CharField(max_length=200) # cart indicates the order is yet to be made
     is_restock = models.BooleanField(default=False)
     rewards_earned = models.IntegerField(default=0)
