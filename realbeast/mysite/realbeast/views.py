@@ -372,7 +372,7 @@ class SizeList(APIView):
         sizings = Size.objects.all()
         if not sizings:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = SizeSerializer(sizings,many=True,context={'request':request})
+        serializer = SimpleSizeSerializer(sizings,many=True,context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class StoreSizeList(APIView):
@@ -384,12 +384,12 @@ class StoreSizeList(APIView):
         sizings = Size.objects.filter(store_id__location=location)
         if not sizings:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = SizeSerializer(sizings,many=True,context={'request':request})
+        serializer = SimpleSizeSerializer(sizings,many=True,context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # Detail view for a specific product at a given store
-# Example url: http://127.0.0.1:8000/api/products/Online/2
+# Example url: http://127.0.0.1:8000/api/sizes/Online/2
 class StoreSizeProductDetail(APIView):
     '''
     Provides CRUD access to product sizing and quantity data, by store. 
@@ -400,35 +400,24 @@ class StoreSizeProductDetail(APIView):
         '''
         List product information for a given store
         '''
-        
         sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id) 
         if not sizings:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = SizeSerializer(sizings,many=True, context={'request':request})
+        serializer =SimpleSizeSerializer(sizings,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         '''
         Add a product to the stock of a store
         '''
-        
-        location = request.data.get('location')
-        product = request.data.get('product_id')
-
-        if location == None or product == None:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-        location_data = Store.objects.get(location=location)
-        product_data = Product.objects.get(product_id=product)
-        
         data = {
-            'location' : location_data, 
-            'product_id' : product_data, 
+            'location' : request.data.get('location'), 
+            'product_id' : request.data.get('product_id'), 
             'size':request.data.get('size'), 
             'quantity':request.data.get('quantity'), 
         }
-        serializer = SizeSerializer(data=data)
+
+        serializer = SimpleSizeSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -436,6 +425,9 @@ class StoreSizeProductDetail(APIView):
 
 
 
+# Example url: http://127.0.0.1:8000/api/sizes/Market%20Mall/1/S/
+# This provides access to the S size of product_id 2 at the Online store
+# implements get, put, delete
 class StoreSizeEntryDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
     '''
@@ -446,13 +438,41 @@ class StoreSizeEntryDetail(APIView):
         '''
         Updates the specified product, if it exists
         '''
-        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id, size=size) 
+        sizings = Size.objects.get(store_id__location=location, product_id__id=product_id, size=size) 
         if not sizings:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = SizeSerializer(sizings,many=True, context={'request':request})
+        serializer = SimpleSizeSerializer(sizings,context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def put(self, request,location,product_id,size,*args,**kwargs):
+        '''
+        Example JSON:
+        {
+        "location": "Market Mall",
+        "product_id": "1",
+        "size": "S",
+        "quantity": 10
+        }
 
+        The product and size should already exist.
+
+        '''
+        sizing = Size.objects.get(store_id__location=location, product_id__id=product_id, size=size) 
+        if not sizing:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        data = {
+            'store_id__location' : request.data.get('location'), 
+            'product_id__id' : request.data.get('product_id'), 
+            'size':request.data.get('size'), 
+            'quantity':request.data.get('quantity'), 
+        }
+
+        serializer = SimpleSizeSerializer(instance=sizing,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request,location,product_id,size,*args,**kwargs):
         '''

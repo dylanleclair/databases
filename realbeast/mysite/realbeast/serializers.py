@@ -192,52 +192,42 @@ class ProductSerializer(serializers.ModelSerializer):
 
         return instance
 
-
-class SizeSerializer(serializers.ModelSerializer):
-    store_id = SimpleStoreSerializer()
-    product_id = SimpleProductSerializer()
+class SimpleSizeSerializer(serializers.ModelSerializer):
+    # Refer to the location of the store associated with this size object
+    location = serializers.CharField(source='store_id.location')
     class Meta:
         model = Size
-        fields = ['store_id','product_id','size', 'quantity']
-
+        fields=['location','product_id','size', 'quantity']
 
     def create(self, validated_data):
         # update product information
 
-        product = validated_data.get('product_id', None) # see simple product serializer
+        product_data = validated_data.get('product_id', None) # see simple product serializer
         store = validated_data.get('store_id', None) # see simple store serializer
         size = validated_data.get('size',None)
         quantity = validated_data.get('quantity', None)
-        
-        instance = Size.objects.create(product_id=product, store_id=store, size=size, quantity=quantity)
+
+        # Do some extra work to get the store from the location
+        store_data = Store.objects.get(location=store["location"])
+
+        instance = Size.objects.create(product_id=product_data, store_id=store_data, size=size, quantity=quantity)
         instance.save()
-        # support for nested fields (brand, colors, product type)
-        brand_data = validated_data.pop('brands')
-        color_data = validated_data.pop('colors') 
-        type_data = validated_data.pop('product_types')
 
         return instance
+
    # code for updating a product
     def update(self, instance, validated_data):
 
+        # instance is the object being updated
+        instance.product_id = validated_data.get('product_id', instance.product_id) # see simple product serializer
+        instance.store_id = validated_data.get('store_id', instance.store_id) # see simple store serializer
+        instance.size = validated_data.get('size',instance.size)
+        instance.quantity = validated_data.get('quantity', instance.quantity)
+
         # update product information
-        instance.price = validated_data.get('price', instance.price)
-        instance.sex = validated_data.get('sex', instance.sex)
-        instance.name = validated_data.get('name', instance.name)
-        instance.img_name = validated_data.get('img_name', instance.img_name)
-        instance.description = validated_data.get('description', instance.description)
-        instance.caption = validated_data.get('caption', instance.caption)
         instance.save()
 
         return instance
-'''
-A variation of the product serializer that focuses on the store
-'''
-class ProductStoreSerializer(serializers.ModelSerializer):
-    sizes = SizeSerializer(many=True,read_only=True)
-    class Meta:
-        model = Product
-        fields = ['id','price', 'sex', 'name','sizes'] 
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -248,7 +238,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ['total_price','order_date','delivery_date','delivery_status','is_restock','rewards_earned', 'user_id', 'store_id']
 
 class ContainsSerializer(serializers.ModelSerializer):
-    product_id = ProductStoreSerializer()
+    #product_id = ProductStoreSerializer()
     class Meta:
         model = Contains
         fields=['quantity','size']
