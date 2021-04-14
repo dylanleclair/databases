@@ -707,3 +707,87 @@ class OrderDetail(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         serializer = OrderSerializer(order, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Deletes the order, unless it is a cart - in which case, the items are removed from the cart
+    def delete(self,request,order_id, *args, **kwargs):
+        order = Order.objects.get(id=order_id)
+        if not order:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # If the status is a cart, empty out all the items
+        # otherwise, delete the order as usual
+
+        if order.delivery_status == 'Cart':
+            orders = Contains.objects.filter(order_id=order_id)
+            for item in orders:
+                item.delete()
+            
+            return Response(
+                {"res": "Cart cleared!"},
+                status=status.HTTP_200_OK
+            )
+        else: 
+            order.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+class OrderDetailAction(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    '''
+    Pre-cooked actions that can be performed on each object
+    '''
+
+    def get(self,request, order_id,action, *args,**kwargs):
+        
+        # check the action and perform associated transformation
+        # (typically just changes status, maybe dates)
+        
+        order = Order.objects.get(id=order_id)
+        if not order:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = OrderSerializer(order, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class OrderItemUpdate(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    # Updates an item in the cart (usually change in quantity)
+    def put (self,request,order_id, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        product = Product.objects.get(pk=product_id)
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            # only the sizes are specific to a given store!
+            'price' : request.data.get('price'), 
+            'sex' : request.data.get('sex'), 
+            'name' : request.data.get('name'), 
+            'description' : request.data.get('description'), 
+            'caption' : request.data.get('caption'), 
+            'brands':request.data.get('brands'), # a JSON array of brands
+            'product_types':request.data.get('product_types'), # a JSON array of product types
+            'colors':request.data.get('colors'), # a JSON array of colors
+        }
+        serializer = ProductSerializer(instance=product, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+    def post (self,request,order_id,*args, **kwargs):
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OrderItemRemove (APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    Handles removal of specific items from cart (using contains id)
+    '''
+    def delete(self,request,order_id,item_id, *args, **kwargs):
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
