@@ -52,7 +52,7 @@ All you need to do is boot up the local server as instructed above, and all of t
 - add store page and product view pages :heavy_check_mark:
 - added skeleton for filtering store (needs to be made functional) :arrows_counterclockwise:
 - added skeleton for updating product information (quantities, description, titles, etc) :arrows_counterclockwise:
-- implement Django REST to get desired API functionality (see endpoints) :arrows_counterclockwise:
+- implement Django REST to get desired API functionality (see Our REST API) :heavy_check_mark:
 
 
 #### Notes to self (django stuff)
