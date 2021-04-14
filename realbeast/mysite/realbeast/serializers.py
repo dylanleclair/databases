@@ -41,12 +41,9 @@ class CustomerSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         profile_data = validated_data.pop('profile')
-        user = User.objects.create(**validated_data)
-        Profile.objects.create(user=user, **profile_data)
 
-        online = Store.objects.get(location="Online")
-        # Create the user's cart
-        Order.objects.create(user_id=user,store_id=online, delivery_status="Cart")
+        Profile.objects.create(user=user, profile=profile_data)
+
 
         return user
 
@@ -239,6 +236,26 @@ class ContainsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contains
         fields=['id','product_id','quantity','size']
+    def create(self, validated_data):
+        # create a new instance from the validated data
+        order_id = self.context['order_id']
+        product_id = validated_data.get('product_id', None)
+        quantity = validated_data.get('quantity', None)
+        size = validated_data.get('size', None)
+
+        order = Order.objects.get(pk=order_id)
+
+        instance = Contains.objects.create(order_id=order, product_id=product_id,quantity=quantity,size=size)
+    
+        return instance
+
+    def update(self,instance,validated_data):
+        instance.product_id = validated_data.get('product_id', instance.product_id)
+        instance.quantity = validated_data.get('quantity', instance.quantity)
+        instance.size = validated_data.get('size', instance.size)
+
+        instance.save()
+        return instance
 
 class OrderSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source='store_id.location')
@@ -251,5 +268,5 @@ class OrderSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         # create a new instance from the validated data
-        
+
         return None

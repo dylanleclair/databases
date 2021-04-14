@@ -12,6 +12,10 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+from datetime import timedelta, date
 # Create your views here.
 
 def index(request):
@@ -29,13 +33,13 @@ def products(request):
     products = Product.objects.all()[:12]
     template = loader.get_template('realbeast/products.html')
 
-    brands = Brand.objects.all()
+    brands = [ x[0] for x in Brand.objects.values_list('brand').distinct() ]
 
     sexes = ['M', 'F', 'U']
 
-    colors = Color.objects.all()
+    colors = [ x[0] for x in Color.objects.values_list('color').distinct() ]
 
-    types = ProductType.objects.all() 
+    types = [ x[0] for x in ProductType.objects.values_list('product_type').distinct() ]
 
     context = {
         'products':products,
@@ -260,8 +264,7 @@ def cart(request):
 #=========================================================
 # User API section
 #=========================================================
-from rest_framework.decorators import action
-from rest_framework.response import Response
+
 # https://stackoverflow.com/questions/25151586/django-rest-framework-retrieving-object-count-from-a-model
 class CountModelMixin(object):
     """
@@ -301,12 +304,17 @@ class UserAPIView(APIView):
         user.first_name = request.data.get('first_name')
         user.last_name = request.data.get('last_name')
         user.is_staff = request.data.get('is_staff') # determines whether user is staff or not
+        user.save()
+        online = Store.objects.get(location="Online")
+        # Create the user's cart
+        Order.objects.create(user_id=user,store_id=online, delivery_status="Cart")
+
         data = {
-            'user': user,
+            'user':user,
             'profile': request.data.get('profile'),
             'email':request.data.get('email')
         }
-        serializer = CustomerSerializer(instance=user, data=data)
+        serializer = CustomerSerializer(instance=user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -747,6 +755,21 @@ class OrderDetailAction(APIView):
         order = Order.objects.get(id=order_id)
         if not order:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        if action=='cancel':
+            order.delivery_status = 'Cancelled'
+        elif action == 'finalize':
+            now = date.today()
+            now = now + timedelta(days=5)
+            order.delivery_status = 'Shipped'
+            order.delivery_date=now
+            # verify this is possible
+            # update the quantities available
+            online = Store.objects.get(location='Online')
+            new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+            new_cart.save()
+        
+        order.save()
         serializer = OrderSerializer(order, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -755,34 +778,24 @@ class OrderItemList(APIView):
     '''
     Interface for viewing items in an order
     '''
-    # Updates an item in the cart (usually change in quantity)
-    def put (self,request,order_id, *args, **kwargs):
-        '''
-        Updates the specified product, if it exists
-        '''
-        product = Product.objects.get(pk=product_id)
-        if not product:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request, order_id, *args,**kwargs):
+        # views a specific item in a cart
+        items = Contains.objects.filter(order_id__id=order_id)
+        serializer = ContainsSerializer(items,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Adds an item to an order
+    def post (self,request,order_id,*args, **kwargs):
         data = {
-            # only the sizes are specific to a given store!
-            'price' : request.data.get('price'), 
-            'sex' : request.data.get('sex'), 
-            'name' : request.data.get('name'), 
-            'description' : request.data.get('description'), 
-            'caption' : request.data.get('caption'), 
-            'brands':request.data.get('brands'), # a JSON array of brands
-            'product_types':request.data.get('product_types'), # a JSON array of product types
-            'colors':request.data.get('colors'), # a JSON array of colors
+            'product_id' : request.data.get('product_id'),
+            'quantity': request.data.get('quantity'),
+            'size':request.data.get('size'),
         }
-        serializer = ProductSerializer(instance=product, data=data,partial=True )
+        serializer = ContainsSerializer(data=data,context={'order_id':order_id})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-    def post (self,request,order_id,*args, **kwargs):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class OrderItemDetail(APIView):
@@ -790,41 +803,38 @@ class OrderItemDetail(APIView):
     '''
     Interface for viewing and editing items in an order
     '''
-
-    
-    def get(self,request, order_id,action, *args,**kwargs):
+    def get(self,request, order_id,item_id, *args,**kwargs):
         # views a specific item in a cart
-        order = Order.objects.get(id=order_id)
-        if not order:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        serializer = OrderSerializer(order, context={'request':request})
+        items = Contains.objects.get(pk=item_id)
+        serializer = ContainsSerializer(items, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
     # Updates an item in the cart (usually change in quantity)
-    def put (self,request,order_id, *args, **kwargs):
+    def put (self,request,order_id, item_id, *args, **kwargs):
         '''
         Updates the specified product, if it exists
         '''
-        product = Product.objects.get(pk=product_id)
-        if not product:
+        item = Contains.objects.get(pk=item_id)
+        if not item:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         data = {
-            # only the sizes are specific to a given store!
-            'price' : request.data.get('price'), 
-            'sex' : request.data.get('sex'), 
-            'name' : request.data.get('name'), 
-            'description' : request.data.get('description'), 
-            'caption' : request.data.get('caption'), 
-            'brands':request.data.get('brands'), # a JSON array of brands
-            'product_types':request.data.get('product_types'), # a JSON array of product types
-            'colors':request.data.get('colors'), # a JSON array of colors
+            # only the sizes are specific to a given store! 
+            'product_id' : request.data.get('product_id'), 
+            'quantity' : request.data.get('quantity'), 
+            'size' : request.data.get('size'), 
         }
-        serializer = ProductSerializer(instance=product, data=data,partial=True )
+        serializer = ContainsSerializer(instance=item, data=data,partial=True )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request,order_id,item_id, *args, **kwargs):
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        item = Contains.objects.get(pk=item_id, order_id=order_id)
+        if not item:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        item.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
