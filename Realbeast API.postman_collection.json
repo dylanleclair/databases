@@ -88,7 +88,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\r\n        \"price\": \"85.00\",\r\n        \"sex\": \"F\",\r\n        \"name\": \"Nike Crater Impact\",\r\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n        \"caption\": \"A preview of the shoe.\",\r\n        \"img_name\": \"crater-impact.jpg\",\r\n        \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n\r\n],\r\n        \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n        \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n    }",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -180,7 +180,23 @@
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": null
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/products/4/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"products",
+										"4",
+										""
+									]
+								}
 							},
 							"_postman_previewlanguage": null,
 							"header": null,
@@ -200,7 +216,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://127.0.0.1:8000/api/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"user",
+								""
+							]
 						}
 					},
 					"response": [
@@ -357,7 +386,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"dylan12\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"username\": \"dylanl\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -462,6 +491,21 @@
 				{
 					"name": "Delete a user",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "dylanl",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
