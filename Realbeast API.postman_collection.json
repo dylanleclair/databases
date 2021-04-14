@@ -7,41 +7,597 @@
 	},
 	"item": [
 		{
-			"name": "",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": ""
-				}
-			},
-			"response": [
+			"name": "Product API",
+			"item": [
 				{
-					"name": "Default",
-					"originalRequest": {
-						"method": "GET",
+					"name": "Update a product's information",
+					"request": {
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": \"115.00\",\r\n    \"sex\": \"U\",\r\n    \"name\": \"100 Thieves Jam Hoodie\",\r\n    \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"100t-jam.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"100 Thieves\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Hoodie\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"Red\"},\r\n{\"color\":\"Black\"}\r\n]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"<product_id>",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update a product's information",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 2,\r\n    \"price\": \"115.00\",\r\n    \"sex\": \"U\",\r\n    \"name\": \"100 Thieves Jam Hoodie\",\r\n    \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"100t-jam.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"100 Thieves\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Hoodie\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"Red\"},\r\n{\"color\":\"Black\"}\r\n]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/products/2/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"products",
+										"2",
+										""
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Add a new product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"price\": \"85.00\",\r\n        \"sex\": \"F\",\r\n        \"name\": \"Nike Crater Impact\",\r\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n        \"caption\": \"A preview of the shoe.\",\r\n        \"img_name\": \"crater-impact.jpg\",\r\n        \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n\r\n],\r\n        \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n        \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add a new product",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "    {\r\n        \"price\": \"85.00\",\r\n        \"sex\": \"F\",\r\n        \"name\": \"Nike Crater Impact\",\r\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n        \"caption\": \"A preview of the shoe.\",\r\n        \"img_name\": \"crater-impact.jpg\",\r\n        \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n\r\n],\r\n        \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n        \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/products/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"products",
+										""
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Remove a product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"<product_id>",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Remove a product",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": null
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User API",
+			"item": [
+				{
+					"name": "Get a user",
+					"request": {
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": ""
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
-					"cookie": [],
-					"body": ""
+					"response": [
+						{
+							"name": "Get a user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/user/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"user",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 14 Apr 2021 05:19:31 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "181"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"username\": \"admin\",\n    \"first_name\": \"Realbeast\",\n    \"last_name\": \"Administrator\",\n    \"email\": \"sample@realbeast.ca\",\n    \"profile\": {\n        \"total_rewards\": 10,\n        \"user_type\": \"Staff\",\n        \"address\": \"193\",\n        \"phone_number\": \"1\",\n        \"card_no\": \"0\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update the user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"FirstName\",\r\n    \"last_name\": \"LastName\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 10,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \" 1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"user",
+								""
+							]
+						},
+						"description": "This will update the logged in User. Since this Postman documentation has the logged in admin user, any changes will be reflected in the above request: 'Get a user'."
+					},
+					"response": [
+						{
+							"name": "Update a user",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"FirstName\",\r\n    \"last_name\": \"LastName\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 10,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \" 1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/user/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"user",
+										""
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"FirstName\",\r\n    \"last_name\": \"LastName\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 10,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \" 1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Create a user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"dylan12\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"user",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create a user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"dylanl\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/user/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"user",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 14 Apr 2021 05:41:22 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "254"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"username\": \"dylanl\",\n    \"first_name\": \"Dylan\",\n    \"last_name\": \"Leclair\",\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\n    \"profile\": {\n        \"total_rewards\": 0,\n        \"user_type\": \"Customer\",\n        \"address\": \"123 Trent St., Calgary AB\",\n        \"phone_number\": \"403 123 4567\",\n        \"card_no\": \"1111 1111 1111 1111\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete a user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"user",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete a user",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/user/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"user",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 14 Apr 2021 05:44:19 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"res\": \"Object deleted!\"\n}"
+						}
+					]
 				}
 			]
+		},
+		{
+			"name": "Order API",
+			"item": []
+		},
+		{
+			"name": "Store API",
+			"item": []
+		},
+		{
+			"name": "Inventory API",
+			"item": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "12345",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

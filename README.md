@@ -34,9 +34,9 @@ Sign into admin by navigating to the login page, enter:
 - Username: `admin`
 - Password: `12345`
 
-From here, you can either do some shopping, update item information, place restock orders and more. 
+From here, you can either do some shopping, update item information and more. The bulk of our time was spent getting our API operational, so the front-end isn't feature complete just yet. 
 
-If you instead want the experience from a customer's point of view, register at the bottom of the homepage. 
+If you instead want the experience from a customer's point of view, sign out of the admin user and register at the bottom of the homepage. 
 
 # Our REST API :whale2:
 
@@ -46,13 +46,15 @@ The documentation for everything involved with that is accessible through Postma
 
 All you need to do is boot up the local server as instructed above, and all of the requests in it should work flawlessly. :tada:
 
+Try not to delete the admin user though.. This could cause some problems!
+
 # To do list (web interface) :zap:
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
 - add user registration, sign in and account management pages :heavy_check_mark:
 - add store page and product view pages :heavy_check_mark:
 - added skeleton for filtering store (needs to be made functional) :arrows_counterclockwise:
 - added skeleton for updating product information (quantities, description, titles, etc) :arrows_counterclockwise:
-- implement Django REST to get desired API functionality (see endpoints) :arrows_counterclockwise:
+- implement Django REST to get desired API functionality (see Our REST API) :heavy_check_mark:
 
 
 #### Notes to self (django stuff)

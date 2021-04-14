@@ -122,7 +122,7 @@ class Size(models.Model):
     store_id = models.ForeignKey(Store, on_delete=models.CASCADE,related_name='store') # if store is deleted, delete this too
 
 class ProductType(models.Model):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_type')
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_types')
     product_type = models.CharField(max_length=200)
 
 class Color(models.Model):
