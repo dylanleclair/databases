@@ -34,7 +34,7 @@ Sign into admin by navigating to the login page, enter:
 - Username: `admin`
 - Password: `12345`
 
-From here, you can either do some shopping, update item information, place restock orders and more. 
+From here, you can either do some shopping, update item information and more. The bulk of our time was spent getting our API operational, so the front-end isn't feature complete just yet. 
 
 If you instead want the experience from a customer's point of view, register at the bottom of the homepage. 
 
