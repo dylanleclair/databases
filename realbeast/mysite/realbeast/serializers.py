@@ -43,6 +43,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile')
         user = User.objects.create(**validated_data)
         Profile.objects.create(user=user, **profile_data)
+
+        online = Store.objects.get(location="Online")
+        # Create the user's cart
+        Order.objects.create(user_id=user,store_id=online, delivery_status="Cart")
+
         return user
 
     # used to update the a profile / user data
@@ -99,8 +104,9 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id','price', 'sex', 'name', 'description','caption','img_name', 'brands','product_types','colors'] 
 
+    # Used to create a new product
     def create(self, validated_data):
-        # update product information
+        
         price = validated_data.get('price', None)
         sex = validated_data.get('sex', None)
         name = validated_data.get('name', None)
@@ -209,7 +215,6 @@ class SimpleSizeSerializer(serializers.ModelSerializer):
 
         # Do some extra work to get the store from the location
         store_data = Store.objects.get(location=store["location"])
-
         instance = Size.objects.create(product_id=product_data, store_id=store_data, size=size, quantity=quantity)
         instance.save()
 
@@ -230,15 +235,21 @@ class SimpleSizeSerializer(serializers.ModelSerializer):
         return instance
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    user_id = CustomerSerializer()
-    store_id = StoreSerializer()
-    class Meta:
-        model = Order
-        fields = ['total_price','order_date','delivery_date','delivery_status','is_restock','rewards_earned', 'user_id', 'store_id']
-
 class ContainsSerializer(serializers.ModelSerializer):
-    #product_id = ProductStoreSerializer()
     class Meta:
         model = Contains
-        fields=['quantity','size']
+        fields=['id','product_id','quantity','size']
+
+class OrderSerializer(serializers.ModelSerializer):
+    location = serializers.CharField(source='store_id.location')
+    username = serializers.CharField(source='user_id.username')
+    contains = ContainsSerializer(many=True)
+    class Meta:
+        model = Order
+        fields = ['id','username','location','delivery_status','contains','rewards_earned','total_price','order_date','delivery_date','is_restock']
+
+    
+    def create(self, validated_data):
+        # create a new instance from the validated data
+
+        return None

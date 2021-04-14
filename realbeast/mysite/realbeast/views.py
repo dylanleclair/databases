@@ -182,17 +182,20 @@ def add_to_cart(request, product_id):
         cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
         product = Product.objects.get(pk=product_id)
         quantity = request.POST['quantity']
+        size = request.POST['size']
+        print(size)
         # if the user already has item in cart, update quantity
-        item_set = Contains.objects.filter(order_id=cart, product_id=product)
+        item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
         if len(item_set) > 0:
             item = item_set[0]
             item.quantity += 1
+            item.size = size
             item.save()
             #Size.objects.get(product_id=product, store_id__location='Online')
         else:
         # else, add new entry to the cart
         # identify the product
-            item = Contains(order_id=cart,product_id=product,quantity=quantity)
+            item = Contains(order_id=cart,product_id=product,quantity=quantity,size=size)
             item.save() # save to the database
     
         
@@ -690,4 +693,17 @@ class UserOrderList(APIView):
         serializer = OrderSerializer(orders,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-#class OrderDetail(APIView):
+
+class OrderDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    '''
+    Allows an order to be modified
+    '''
+
+    def get(self,request, order_id, *args,**kwargs):
+        order = Order.objects.get(id=order_id)
+        if not order:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = OrderSerializer(order, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
