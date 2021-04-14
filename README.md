@@ -46,6 +46,8 @@ The documentation for everything involved with that is accessible through Postma
 
 All you need to do is boot up the local server as instructed above, and all of the requests in it should work flawlessly. :tada:
 
+Try not to delete the admin user though.. This could cause some problems!
+
 # To do list (web interface) :zap:
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
 - add user registration, sign in and account management pages :heavy_check_mark:
