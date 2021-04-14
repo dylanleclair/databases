@@ -6,12 +6,16 @@ from django.template.backends.django import Template
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
-from .serializers import BrandSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, StoreSerializer, UserSerializer
+from .serializers import *
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.utils import timezone
+from datetime import timedelta, date
 # Create your views here.
 
 def index(request):
@@ -29,13 +33,13 @@ def products(request):
     products = Product.objects.all()[:12]
     template = loader.get_template('realbeast/products.html')
 
-    brands = Brand.objects.all()
+    brands = [ x[0] for x in Brand.objects.values_list('brand').distinct() ]
 
     sexes = ['M', 'F', 'U']
 
-    colors = Color.objects.all()
+    colors = [ x[0] for x in Color.objects.values_list('color').distinct() ]
 
-    types = ProductType.objects.all() 
+    types = [ x[0] for x in ProductType.objects.values_list('product_type').distinct() ]
 
     context = {
         'products':products,
@@ -182,17 +186,20 @@ def add_to_cart(request, product_id):
         cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
         product = Product.objects.get(pk=product_id)
         quantity = request.POST['quantity']
+        size = request.POST['size']
+        print(size)
         # if the user already has item in cart, update quantity
-        item_set = Contains.objects.filter(order_id=cart, product_id=product)
+        item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
         if len(item_set) > 0:
             item = item_set[0]
             item.quantity += 1
+            item.size = size
             item.save()
             #Size.objects.get(product_id=product, store_id__location='Online')
         else:
         # else, add new entry to the cart
         # identify the product
-            item = Contains(order_id=cart,product_id=product,quantity=quantity)
+            item = Contains(order_id=cart,product_id=product,quantity=quantity,size=size)
             item.save() # save to the database
     
         
@@ -254,9 +261,9 @@ def cart(request):
 
 # API VIEWS
 
-
-from rest_framework.decorators import action
-from rest_framework.response import Response
+#=========================================================
+# User API section
+#=========================================================
 
 # https://stackoverflow.com/questions/25151586/django-rest-framework-retrieving-object-count-from-a-model
 class CountModelMixin(object):
@@ -269,76 +276,13 @@ class CountModelMixin(object):
         content = {'count': queryset.count()}
         return Response(content)
 
-# the triple quoted comments for each of these are converted to markdown
-# which is rendered on the browsable API views
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+'''
+Probably the only thing worth noting from this!
 
-class ProfileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows profiles to be viewed or edited.
-    Profiles have a one-to-one relationship with the Users object, which handles authentication. 
-    
-    Profiles serve to add the information users needs for our project to a user's authentication details. 
-    
-    This includes: 
-    
-    - user type
-    - addresses
-    - rewards points
-    - phone numbers
-    - and payment information.  
-    """
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+You can make your own views using this!!! 
 
-class StoreViewSet(viewsets.ModelViewSet):
-    '''
-    
-    '''
-    queryset = Store.objects.all()
-    serializer_class = StoreSerializer
-
-
-
-class CustomerViewSet(viewsets.ModelViewSet, CountModelMixin):
-    '''
-    Combines the user and profile objects
-    '''
-    queryset = User.objects.all()
-    serializer_class = CustomerSerializer
-
-
-class ProductViewSet(viewsets.ModelViewSet, CountModelMixin):
-    '''
-    Combines the user and profile objects
-    '''
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-class BrandViewSet(viewsets.ModelViewSet):
-    queryset = Brand.objects.all()
-    serializer_class = BrandSerializer
-
-class ProductBrandList(generics.ListAPIView):
-    serializer_class = Product
-    def get_queryset(self):
-        return Brand.filter
-
-class OrderViewSet(viewsets.ModelViewSet, CountModelMixin):
-    '''
-    Combines the user and profile objects
-    '''
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-
-
+Will likely use for the rest of the other API endpoints.
+'''
 class UserAPIView(APIView):
     '''
     Gets the data associated with the logged in user. Supports CRUD. 
@@ -360,12 +304,17 @@ class UserAPIView(APIView):
         user.first_name = request.data.get('first_name')
         user.last_name = request.data.get('last_name')
         user.is_staff = request.data.get('is_staff') # determines whether user is staff or not
+        user.save()
+        online = Store.objects.get(location="Online")
+        # Create the user's cart
+        Order.objects.create(user_id=user,store_id=online, delivery_status="Cart")
+
         data = {
-            'user': user,
+            'user':user,
             'profile': request.data.get('profile'),
             'email':request.data.get('email')
         }
-        serializer = CustomerSerializer(instance=user, data=data)
+        serializer = CustomerSerializer(instance=user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -415,6 +364,476 @@ class UserAPIView(APIView):
         if not usr:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         usr.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
+#=========================================================
+# Inventory API section
+#=========================================================
+
+class SizeList(APIView):
+    '''
+    Contains all entries of sizes
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self,request, *args, **kwargs):
+        sizings = Size.objects.all()
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SimpleSizeSerializer(sizings,many=True,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class StoreSizeList(APIView):
+    '''
+    Contains size entries by store
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self,request,location, *args, **kwargs):
+        sizings = Size.objects.filter(store_id__location=location)
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SimpleSizeSerializer(sizings,many=True,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Detail view for a specific product at a given store
+# Example url: http://127.0.0.1:8000/api/sizes/Online/2
+class StoreSizeProductDetail(APIView):
+    '''
+    Provides CRUD access to product sizing and quantity data, by store. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+    # create a get that takes store and product id as a parameter
+    def get(self,request,location, product_id, *args, **kwargs):
+        '''
+        List product information for a given store
+        '''
+        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id) 
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer =SimpleSizeSerializer(sizings,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        '''
+        Add a product to the stock of a store
+        '''
+        data = {
+            'location' : request.data.get('location'), 
+            'product_id' : request.data.get('product_id'), 
+            'size':request.data.get('size'), 
+            'quantity':request.data.get('quantity'), 
+        }
+
+        serializer = SimpleSizeSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# Example url: http://127.0.0.1:8000/api/sizes/Market%20Mall/1/S/
+# This provides access to the S size of product_id 2 at the Online store
+# implements get, put, delete
+class StoreSizeEntryDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    Individual size entries are accessed through this endpoint.
+    '''
+    # update size information
+    def get (self,request,location,product_id,size, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        sizings = Size.objects.get(store_id__location=location, product_id__id=product_id, size=size) 
+        if not sizings:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = SimpleSizeSerializer(sizings,context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request,location,product_id,size,*args,**kwargs):
+        '''
+        Example JSON:
+        {
+        "location": "Market Mall",
+        "product_id": "1",
+        "size": "S",
+        "quantity": 10
+        }
+
+        The product and size should already exist.
+
+        '''
+        sizing = Size.objects.get(store_id__location=location, product_id__id=product_id, size=size) 
+        if not sizing:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        data = {
+            'store_id__location' : request.data.get('location'), 
+            'product_id__id' : request.data.get('product_id'), 
+            'size':request.data.get('size'), 
+            'quantity':request.data.get('quantity'), 
+        }
+
+        serializer = SimpleSizeSerializer(instance=sizing,data=data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,location,product_id,size,*args,**kwargs):
+        '''
+        Removes the product from the store
+        '''
+        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id, size=size) 
+        if not sizing:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        sizing.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+#=========================================================
+# Product API section
+#=========================================================
+class ProductList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    A list of all products across all stores, this API endpoint is used to alter data about a product
+    
+    This includes:
+        - brands
+        - product type
+        - colors
+        - description
+        - sex
+        - price
+    '''
+    def get(self,request, *args, **kwargs):
+        '''
+        List product information
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product  
+        products = Product.objects.all()
+        if not products:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(products,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def post(self, request, *args, **kwargs):
+        '''
+        Create a product with given product data
+        '''
+        data = {
+            'price' : request.data.get('price'), 
+            'sex' : request.data.get('sex'), 
+            'name' : request.data.get('name'), 
+            'description' : request.data.get('description'), 
+            'caption' : request.data.get('caption'), 
+            'img_name' : request.data.get('img_name'),
+            'brands':request.data.get('brands'), # a JSON array of brands
+            'product_types':request.data.get('product_types'), # a JSON array of product types
+            'colors':request.data.get('colors'), # a JSON array of colors
+        }
+        serializer = ProductSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# path:  
+# general product management class -- this allows for product data (shared amongst all stores) to be updated
+class ProductDetail (APIView):
+    '''
+    Allows product data to be updated and maintained. Supports CRUD, in addition to some queries. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    # Retreives a product
+    def get(self,request,product_id, *args, **kwargs):
+        '''
+        List product information for a given product
+        '''
+        product = Product.objects.get(pk=product_id)
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = ProductSerializer(product, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Updates a product
+    def put (self,request,product_id, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        product = Product.objects.get(pk=product_id)
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            # only the sizes are specific to a given store!
+            'price' : request.data.get('price'), 
+            'sex' : request.data.get('sex'), 
+            'name' : request.data.get('name'), 
+            'description' : request.data.get('description'), 
+            'caption' : request.data.get('caption'), 
+            'brands':request.data.get('brands'), # a JSON array of brands
+            'product_types':request.data.get('product_types'), # a JSON array of product types
+            'colors':request.data.get('colors'), # a JSON array of colors
+        }
+        serializer = ProductSerializer(instance=product, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Deletes a product
+    def delete(self, request, product_id, *args, **kwargs):
+        product = Product.objects.get(pk=product_id)
+        if not product:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        product.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+        
+
+#=========================================================
+# Store API section
+#=========================================================
+# path: 'api/stores/'
+class StoreList(APIView):    
+    '''
+    Allows a specific store to be altered. Supports CRUD, in addition to some queries. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request, *args, **kwargs):
+        '''
+        List information for all stores
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        store = Store.objects.all() 
+        if not store:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(store,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # add post
+    #def post(self,request, *args, **kwargs):
+
+# path: 'api/stores/<str:location>/'
+# example: http://127.0.0.1:8000/api/stores/Chinook/
+class StoreDetail(APIView):    
+    '''
+    Allows a specific store to be altered. Supports CRUD, in addition to some queries. 
+    '''
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self,request,location, *args, **kwargs):
+        '''
+        List information for a given location
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        store = Store.objects.get(location=location) 
+        if not store:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = StoreSerializer(store, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # add put, delete, etc.
+    #def post(self,request, location, *args, **kwargs):
+
+
+    def delete(self,request,location, *args, **kwargs):
+        location = Store.objects.get(location=location)
+        if not location:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        location.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
+#=========================================================
+# Order API section
+#=========================================================
+
+class AllOrderList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    A list of orders for all users - to be accessed by staff
+    '''
+    def get(self,request, *args, **kwargs):
+        '''
+        List information for a given location
+        '''
+        
+        #store = Size.objects.get(store_id__id=store_id)
+        #find the sizings and quantities of a product 
+        orders = Order.objects.all().order_by('order_date')[:10]
+        serializer = OrderSerializer(orders,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserOrderList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    The authenticated user's own orders
+    '''
+
+    # Retreives a user's data
+    def get(self,request, *args, **kwargs):
+        usr = User.objects.get(id= request.user.id)
+        if not usr:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        orders= Order.objects.filter(user_id=usr).order_by('order_date')[:10]
+        serializer = OrderSerializer(orders,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class OrderDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    '''
+    Allows an order to be modified
+    '''
+
+    def get(self,request, order_id, *args,**kwargs):
+        order = Order.objects.get(id=order_id)
+        if not order:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        serializer = OrderSerializer(order, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Deletes the order, unless it is a cart - in which case, the items are removed from the cart
+    def delete(self,request,order_id, *args, **kwargs):
+        order = Order.objects.get(id=order_id)
+        if not order:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # If the status is a cart, empty out all the items
+        # otherwise, delete the order as usual
+
+        if order.delivery_status == 'Cart':
+            orders = Contains.objects.filter(order_id=order_id)
+            for item in orders:
+                item.delete()
+            
+            return Response(
+                {"res": "Cart cleared!"},
+                status=status.HTTP_200_OK
+            )
+        else: 
+            order.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+class OrderDetailAction(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    Pre-cooked actions that can be performed on each object
+    '''
+
+    def get(self,request, order_id,action, *args,**kwargs):
+        
+        # check the action and perform associated transformation
+        # (typically just changes status, maybe dates)
+        
+        order = Order.objects.get(id=order_id)
+        if not order:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        if action=='cancel':
+            order.delivery_status = 'Cancelled'
+        elif action == 'finalize':
+            now = date.today()
+            now = now + timedelta(days=5)
+            order.delivery_status = 'Shipped'
+            order.delivery_date=now
+            # verify this is possible
+            # update the quantities available
+            online = Store.objects.get(location='Online')
+            new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+            new_cart.save()
+        
+        order.save()
+        serializer = OrderSerializer(order, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class OrderItemList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    Interface for viewing items in an order
+    '''
+    
+    def get(self,request, order_id, *args,**kwargs):
+        # views a specific item in a cart
+        items = Contains.objects.filter(order_id__id=order_id)
+        serializer = ContainsSerializer(items,many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Adds an item to an order
+    def post (self,request,order_id,*args, **kwargs):
+        data = {
+            'product_id' : request.data.get('product_id'),
+            'quantity': request.data.get('quantity'),
+            'size':request.data.get('size'),
+        }
+        serializer = ContainsSerializer(data=data,context={'order_id':order_id})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OrderItemDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    '''
+    Interface for viewing and editing items in an order
+    '''
+    def get(self,request, order_id,item_id, *args,**kwargs):
+        # views a specific item in a cart
+        items = Contains.objects.get(pk=item_id)
+        serializer = ContainsSerializer(items, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Updates an item in the cart (usually change in quantity)
+    def put (self,request,order_id, item_id, *args, **kwargs):
+        '''
+        Updates the specified product, if it exists
+        '''
+        item = Contains.objects.get(pk=item_id)
+        if not item:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            # only the sizes are specific to a given store! 
+            'product_id' : request.data.get('product_id'), 
+            'quantity' : request.data.get('quantity'), 
+            'size' : request.data.get('size'), 
+        }
+        serializer = ContainsSerializer(instance=item, data=data,partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,order_id,item_id, *args, **kwargs):
+        item = Contains.objects.get(pk=item_id, order_id=order_id)
+        if not item:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        item.delete()
         return Response(
             {"res": "Object deleted!"},
             status=status.HTTP_200_OK

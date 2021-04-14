@@ -24,12 +24,12 @@ from mysite import api as myapi
 router = myapi.DocumentedRouter()
 #router.register(r'profiles', ProfileViewSet)
 #router.register(r'users', UserViewSet)
-router.register(r'profiles', ProfileViewSet)
-router.register(r'stores', StoreViewSet)
-router.register(r'customers', CustomerViewSet)
-router.register(r'products', ProductViewSet)
-router.register(r'brands', BrandViewSet)
-router.register(r'orders', OrderViewSet)
+#router.register(r'profiles', ProfileViewSet)
+#router.register(r'stores', StoreViewSet)
+#router.register(r'customers', CustomerViewSet)
+#router.register(r'products', ProductViewSet)
+#router.register(r'brands', BrandViewSet)
+#router.register(r'orders', OrderViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),# directs to root of realbeast
@@ -38,5 +38,20 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')), # adding login functionality!
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/lol/', UserAPIView.as_view(), name="lol")
+    path('api/user/', UserAPIView.as_view(), name="user"),
+    path('api/sizes/<str:location>/<int:product_id>/', StoreSizeProductDetail.as_view(), name="products"),
+    path('api/sizes/<str:location>/<int:product_id>/<str:size>/', StoreSizeEntryDetail.as_view(), name="products"),
+    path('api/sizes/', SizeList.as_view(), name="sizes"),
+    path('api/sizes/<str:location>/', StoreSizeList.as_view(), name="sizes"),
+    path('api/stores/', StoreList.as_view(), name="stores"),
+    path('api/stores/<str:location>/', StoreDetail.as_view(), name="store"),
+    path('api/products/', ProductList.as_view(), name='products'),
+    path('api/products/<int:product_id>/', ProductDetail.as_view(), name='products'),
+    path('api/orders/', UserOrderList.as_view(), name="user-orders"),
+    path('api/all-orders/', AllOrderList.as_view(),name="all-orders"),
+    path('api/orders/<int:order_id>/',OrderDetail.as_view(),name='order-detail'),
+    path('api/orders/<int:order_id>/contains/', OrderItemList.as_view(),name='item-list'),
+    path('api/orders/<int:order_id>/contains/<int:item_id>', OrderItemDetail.as_view(),name='item-list'),
+    path('api/orders/<int:order_id>/<str:action>/', OrderDetailAction.as_view(), name='order-action'),
+   
 ]
