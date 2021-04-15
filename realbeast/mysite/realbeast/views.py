@@ -42,6 +42,7 @@ def products(request):
     types = [ x[0] for x in ProductType.objects.values_list('product_type').distinct() ]
 
     context = {
+        'message':'Select your filters',
         'products':products,
         'brands':brands,
         'sexes':sexes,
@@ -152,12 +153,12 @@ def update_user_info(request, user_id):
     user = get_object_or_404(User,pk=user_id)
     profile = user.profile
 
-    user.username = request.POST['username'];
-    user.first_name = request.POST['firstname'];
-    user.last_name = request.POST['lastname'];
-    user.email = request.POST['email'];
+    user.first_name = request.POST['firstname']
+    user.last_name = request.POST['lastname']
+    user.email = request.POST['email']
     user.profile.address = request.POST['address']
     user.profile.phone_number = request.POST['phone']
+    user.profile.phone_number = request.POST['card_no']
     user.save()
     return HttpResponseRedirect(reverse('realbeast:account'))
 
@@ -174,6 +175,11 @@ def register(request):
     user.profile.user_type= "Customer"
     user.save()
     user = authenticate(request,username=username, password=password)
+    
+    # Create the user's cart
+    online = Store.objects.get(location="Online")
+    Order.objects.create(user_id=user,store_id=online, delivery_status="Cart")
+
     login(request,user) # log them in!
     return HttpResponseRedirect(reverse('realbeast:products'))
 
@@ -186,8 +192,11 @@ def add_to_cart(request, product_id):
         cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')
         product = Product.objects.get(pk=product_id)
         quantity = request.POST['quantity']
-        size = request.POST['size']
+        size = request.POST.getlist('size')
         print(size)
+        if not size:
+            return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
+        size = size[0]
         # if the user already has item in cart, update quantity
         item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
         if len(item_set) > 0:
@@ -218,7 +227,58 @@ def my_login(request):
         raise Http404("Invalid login")
 
 def apply_filters(request):
-    raise Http404("Not yet implemented")
+    brands = request.POST.getlist('brands')
+    sex = request.POST.getlist('sex')
+    types = request.POST.getlist('types')
+    colors = request.POST.getlist('colors')
+
+    print(brands)
+
+    products_by_brand = Product.objects.none()
+    for brand in brands:
+        products_by_brand = products_by_brand.union(Product.objects.filter(brands__brand=brand))
+
+    products_by_sex = Product.objects.none()
+    for s in sex:
+        products_by_sex = products_by_sex.union(Product.objects.filter(sex=s))
+
+    products_by_type = Product.objects.none()
+    for t in types:
+        products_by_type = products_by_type.union(Product.objects.filter(product_types__product_type=t))
+    
+    products_by_color = Product.objects.none()
+    for color in colors:
+        products_by_color = products_by_color.union(Product.objects.filter(colors__color=color))
+    
+    products = Product.objects.none().union(products_by_brand,products_by_sex,products_by_type,products_by_color)
+
+    message = "Select your filters"
+
+    if not products:
+        message = "Your filters ended up with no results"
+        products = Product.objects.all()
+
+    # get a list of products instead!
+    template = loader.get_template('realbeast/products.html')
+
+    brands = [ x[0] for x in Brand.objects.values_list('brand').distinct() ]
+
+    sexes = ['M', 'F', 'U']
+
+    colors = [ x[0] for x in Color.objects.values_list('color').distinct() ]
+
+    types = [ x[0] for x in ProductType.objects.values_list('product_type').distinct() ]
+
+    context = {
+        'message':message,
+        'products':products,
+        'brands':brands,
+        'sexes':sexes,
+        'types':types,
+        'colors':colors,
+        }
+
+    return HttpResponse(template.render(context, request))
 
 def cart(request):
     user = request.user # retreive the logged in user
@@ -420,6 +480,11 @@ class UserAPIView(APIView):
         usr = self.get_user(request.user.id)
         if not usr:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if usr.username == 'admin':
+            return Response(
+            {"res": "Deleting the admin is forbidden!"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
         usr.delete()
         return Response(
             {"res": "Object deleted!"},
@@ -546,7 +611,7 @@ class StoreSizeEntryDetail(APIView):
         '''
         Removes the product from the store
         '''
-        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id, size=size) 
+        sizing = Size.objects.get(store_id__location=location, product_id__id=product_id, size=size) 
         if not sizing:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         sizing.delete()
@@ -683,8 +748,22 @@ class StoreList(APIView):
         serializer = StoreSerializer(store,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # add post
-    #def post(self,request, *args, **kwargs):
+    # add a new location
+    def post(self,request, *args, **kwargs):
+        '''
+        Create a store with given data
+        '''
+
+
+        data = {
+            'location' : request.data.get('location'), 
+            'owner' : request.data.get('owner'), 
+        }
+        serializer = StoreSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # path: 'api/stores/<str:location>/'
 # example: http://127.0.0.1:8000/api/stores/Chinook/
@@ -708,13 +787,30 @@ class StoreDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # add put, delete, etc.
-    #def post(self,request, location, *args, **kwargs):
-
+    def put(self,request, location, *args, **kwargs):
+        location = Store.objects.get(location=location)
+        if not location:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            'location' : request.data.get('location'), 
+            'owner' : request.data.get('owner'), 
+        }
+        serializer = StoreSerializer(instance=location,data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request,location, *args, **kwargs):
         location = Store.objects.get(location=location)
         if not location:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if location.location == 'Online':
+            return Response(
+            {"res": "Deleting the Online store is forbidden!"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
         location.delete()
         return Response(
             {"res": "Object deleted!"},
@@ -815,6 +911,9 @@ class OrderDetailAction(APIView):
         
         if action=='cancel':
             order.delivery_status = 'Cancelled'
+            online = Store.objects.get(location='Online')
+            new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+            new_cart.save()
         elif action == 'finalize':
             now = date.today()
             now = now + timedelta(days=5)

@@ -17,10 +17,30 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['total_rewards', 'user_type', 'address', 'phone_number', 'card_no']
 
+
+
+
 class StoreSerializer(serializers.ModelSerializer):
+
+    owner = serializers.CharField(source='owner_id.username')
     class Meta:
         model = Store
-        fields = ['location', 'owner_id']
+        fields = ['location', 'owner']
+
+    def create(self, validated_data):
+        owner = User.objects.get(username=validated_data.get('owner_id',None).get('username'))
+        location = self.validated_data.get('location',None)
+        instance = Store.objects.create(owner_id = owner,location=location )
+
+        return instance
+    # used to update the a profile / user data
+    def update(self, instance, validated_data):
+
+        # create a cart for the new user!
+        instance.owner_id = User.objects.get(username=validated_data.get('owner_id',instance.owner_id).get('username'))
+        instance.save()
+
+        return instance
 
 class SimpleStoreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,7 +63,6 @@ class CustomerSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile')
 
         Profile.objects.create(user=user, profile=profile_data)
-
 
         return user
 
