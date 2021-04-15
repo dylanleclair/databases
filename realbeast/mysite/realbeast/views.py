@@ -189,7 +189,7 @@ def add_to_cart(request, product_id):
         # find their cart (ie: order with status="Cart")
         # and add (1x) the product to it
         user = request.user
-        cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')
+        cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
         product = Product.objects.get(pk=product_id)
         quantity = request.POST['quantity']
         size = request.POST.getlist('size')
@@ -199,7 +199,7 @@ def add_to_cart(request, product_id):
         size = size[0]
         # if the user already has item in cart, update quantity
         item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
-        if len(item_set) > 0:
+        if item_set.count() > 0:
             item = item_set[0]
             item.quantity += 1
             item.size = size
