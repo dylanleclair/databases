@@ -153,10 +153,9 @@ def update_user_info(request, user_id):
     user = get_object_or_404(User,pk=user_id)
     profile = user.profile
 
-    user.username = request.POST['username'];
-    user.first_name = request.POST['firstname'];
-    user.last_name = request.POST['lastname'];
-    user.email = request.POST['email'];
+    user.first_name = request.POST['firstname']
+    user.last_name = request.POST['lastname']
+    user.email = request.POST['email']
     user.profile.address = request.POST['address']
     user.profile.phone_number = request.POST['phone']
     user.save()
@@ -252,7 +251,7 @@ def apply_filters(request):
     message = "Select your filters"
 
     if not products:
-        message = "Your filters ended up with no results!"
+        message = "Your filters ended up with no results"
         products = Product.objects.all()
 
     # get a list of products instead!
