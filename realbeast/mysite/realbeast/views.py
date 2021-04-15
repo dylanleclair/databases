@@ -183,7 +183,7 @@ def add_to_cart(request, product_id):
         # find their cart (ie: order with status="Cart")
         # and add (1x) the product to it
         user = request.user
-        cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
+        cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')
         product = Product.objects.get(pk=product_id)
         quantity = request.POST['quantity']
         size = request.POST['size']
@@ -257,6 +257,63 @@ def cart(request):
     }
     template = loader.get_template('realbeast/cart.html')
     return HttpResponse(template.render(context, request))
+
+# Restock order page 
+def restock(request):
+    products = Product.objects.all()
+
+    stores = Store.objects.all()
+
+    allProducts = []
+    for product in products:
+
+        sizes = Size.objects.filter(product_id=product.id).all()
+
+        prod_size = []
+
+        for size in sizes:
+
+            prod_size.append(size)
+
+        
+        prod_obj = {
+            'prod': product,
+            'product_sizes':prod_size,
+        }
+
+        allProducts.append(prod_obj)
+
+    sizes = Size.objects.filter(product_id=product.id)
+    context = {
+        'products' : allProducts,
+        'stores' : stores
+    }
+    return render(request, 'realbeast/restock.html', context)
+
+def restockItems(request) :
+    product = request.POST['merch']
+    location = request.POST['Location']
+    siz = request.POST['sizeSelect']
+    quantity = request.POST['quantities']
+
+    sizes = Size.objects.filter(product_id = product).filter(size = siz)
+    if(not(sizes)):
+
+        temp = Size()
+        temp.product_id = product
+        temp.size = siz
+        temp.store_id = location.id
+        temp.save()
+
+    else:
+        temp = sizes[0]
+        temp.quantity += quantity
+        temp.save()   
+
+
+    return HttpResponseRedirect(reverse('realbeast:products'))
+
+
 
 
 # API VIEWS
