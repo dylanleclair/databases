@@ -196,6 +196,7 @@ def add_to_cart(request, product_id):
         print(size)
         if not size:
             return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
+        size = size[0]
         # if the user already has item in cart, update quantity
         item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
         if len(item_set) > 0:
