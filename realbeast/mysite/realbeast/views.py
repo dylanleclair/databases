@@ -376,6 +376,34 @@ def restockItems(request) :
 
 
 
+
+def checkout(request):
+    user = request.user # retreive the logged in user
+    # find the items in their cart!
+    order = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
+    context = {
+        'order_id' :  order.id,
+    }
+    template = loader.get_template('realbeast/checkout.html')
+    return HttpResponse(template.render(context,request))
+
+def finalize_order(request):
+    print("YOLO")
+    user = request.user
+    order = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
+    # code to finalize the order 
+
+    now = date.today()
+    now = now + timedelta(days=5)
+    order.delivery_status = 'Shipped'
+    order.delivery_date=now
+    # verify this is possible
+    # update the quantities available
+    online = Store.objects.get(location='Online')
+    new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+    new_cart.save()
+    
+    return HttpResponseRedirect(reverse('realbeast:products'))
 # API VIEWS
 
 #=========================================================

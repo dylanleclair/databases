@@ -21,9 +21,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('apply_filters', views.apply_filters, name='apply_filters'),
     path('product_edit/<int:product_id>/', views.product_edit, name='product_edit'),
-    path('api/', views.UserAPIView.as_view()),
+    path('checkout/', views.checkout, name='checkout'),
+    path('finalize/', views.finalize_order, name='finalize_order'),
     path('account/restock/',views.restock, name= 'restock'),
     path('restock/',views.restockItems, name = 'restockItems')
+
     # this code will:
     # match a path with /realbeast/<integer> (ex: localhost:8000/realbeast/1)
     # it will then call the function with the name 'detail' from the module views.detail (see views)
