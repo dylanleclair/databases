@@ -41,7 +41,7 @@
 
 {% block content %}
 <!--Add an area to enter filters -->
-<p id="filters">Select your filters.</p>
+<p id="filters">{{message}}.</p>
 <form id="filter-form" action="{% url 'realbeast:apply_filters' %}" method="post">
   {% csrf_token %}
   <div class="filter-section">
@@ -49,7 +49,7 @@
       <h2>Brands</h2>
       <!-- Choose brands to search from -->
       {% for brand in brands %}
-      <label><input id="filter" type="checkbox" name="brand_filter" value="{{ brand }}">{{ brand}}</label>
+      <label><input id="filter" type="checkbox" name="brands" value="{{ brand }}">{{ brand}}</label>
       {% endfor %}
     </div>
 
@@ -57,7 +57,7 @@
       <h2>Sexes</h2>
       <!-- Choose sex to search from -->
       {% for sex in sexes %}
-      <label><input id="filter" type="checkbox" name="sex_filter" value="{{ sex }}">{{ sex }}</label>
+      <label><input id="filter" type="checkbox" name="sex" value="{{ sex }}">{{ sex }}</label>
       {% endfor %}
     </div>
 
@@ -65,7 +65,7 @@
       <h2>Product Types</h2>
       <!-- Choose product types to search from -->
       {% for type in types %}
-      <label><input id="filter" type="checkbox" name="type_filter" value="{{ type }}">{{type}}</label>
+      <label><input id="filter" type="checkbox" name="types" value="{{ type }}">{{type}}</label>
       {% endfor %}
     </div>
 
@@ -73,7 +73,7 @@
       <!-- Choose colours to search from -->
       <h2>Colors</h2>
       {% for color in colors %}
-      <label><input id="filter" type="checkbox" name="colour_filter" value="{{ color }}">{{ color }}</label>
+      <label><input id="filter" type="checkbox" name="colors" value="{{ color }}">{{ color }}</label>
       {% endfor %}
     </div>
   </div>

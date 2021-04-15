@@ -42,6 +42,7 @@ def products(request):
     types = [ x[0] for x in ProductType.objects.values_list('product_type').distinct() ]
 
     context = {
+        'message':'Select your filters',
         'products':products,
         'brands':brands,
         'sexes':sexes,
@@ -174,6 +175,11 @@ def register(request):
     user.profile.user_type= "Customer"
     user.save()
     user = authenticate(request,username=username, password=password)
+    
+    # Create the user's cart
+    online = Store.objects.get(location="Online")
+    Order.objects.create(user_id=user,store_id=online, delivery_status="Cart")
+
     login(request,user) # log them in!
     return HttpResponseRedirect(reverse('realbeast:products'))
 
@@ -218,7 +224,58 @@ def my_login(request):
         raise Http404("Invalid login")
 
 def apply_filters(request):
-    raise Http404("Not yet implemented")
+    brands = request.POST.getlist('brands')
+    sex = request.POST.getlist('sex')
+    types = request.POST.getlist('types')
+    colors = request.POST.getlist('colors')
+
+    print(brands)
+
+    products_by_brand = Product.objects.none()
+    for brand in brands:
+        products_by_brand = products_by_brand.union(Product.objects.filter(brands__brand=brand))
+
+    products_by_sex = Product.objects.none()
+    for s in sex:
+        products_by_sex = products_by_sex.union(Product.objects.filter(sex=s))
+
+    products_by_type = Product.objects.none()
+    for t in types:
+        products_by_type = products_by_type.union(Product.objects.filter(product_types__product_type=t))
+    
+    products_by_color = Product.objects.none()
+    for color in colors:
+        products_by_color = products_by_color.union(Product.objects.filter(colors__color=color))
+    
+    products = Product.objects.none().union(products_by_brand,products_by_sex,products_by_type,products_by_color)
+
+    message = "Select your filters"
+
+    if not products:
+        message = "Your filters ended up with no results!"
+        products = Product.objects.all()
+
+    # get a list of products instead!
+    template = loader.get_template('realbeast/products.html')
+
+    brands = [ x[0] for x in Brand.objects.values_list('brand').distinct() ]
+
+    sexes = ['M', 'F', 'U']
+
+    colors = [ x[0] for x in Color.objects.values_list('color').distinct() ]
+
+    types = [ x[0] for x in ProductType.objects.values_list('product_type').distinct() ]
+
+    context = {
+        'message':message,
+        'products':products,
+        'brands':brands,
+        'sexes':sexes,
+        'types':types,
+        'colors':colors,
+        }
+
+    return HttpResponse(template.render(context, request))
 
 def cart(request):
     user = request.user # retreive the logged in user
