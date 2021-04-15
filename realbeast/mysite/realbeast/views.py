@@ -351,9 +351,9 @@ def restock(request):
     return render(request, 'realbeast/restock.html', context)
 
 def restockItems(request) :
-    product = request.POST['merch']
+    product = request.POST['prod']
     location = request.POST['Location']
-    siz = request.POST['sizeSelect']
+    siz = request.POST.getlist['sizeSelect']
     quantity = request.POST['quantities']
 
     sizes = Size.objects.filter(product_id = product).filter(size = siz)
@@ -392,11 +392,12 @@ def finalize_order(request):
     user = request.user
     order = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
     # code to finalize the order 
-
+    print(order)
     now = date.today()
     now = now + timedelta(days=5)
     order.delivery_status = 'Shipped'
     order.delivery_date=now
+    order.save()
     # verify this is possible
     # update the quantities available
     online = Store.objects.get(location='Online')
