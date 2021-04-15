@@ -489,7 +489,7 @@ class StoreSizeEntryDetail(APIView):
         '''
         Removes the product from the store
         '''
-        sizings = Size.objects.filter(store_id__location=location, product_id__id=product_id, size=size) 
+        sizing = Size.objects.get(store_id__location=location, product_id__id=product_id, size=size) 
         if not sizing:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         sizing.delete()
@@ -626,8 +626,22 @@ class StoreList(APIView):
         serializer = StoreSerializer(store,many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # add post
-    #def post(self,request, *args, **kwargs):
+    # add a new location
+    def post(self,request, *args, **kwargs):
+        '''
+        Create a store with given data
+        '''
+
+
+        data = {
+            'location' : request.data.get('location'), 
+            'owner' : request.data.get('owner'), 
+        }
+        serializer = StoreSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # path: 'api/stores/<str:location>/'
 # example: http://127.0.0.1:8000/api/stores/Chinook/
@@ -651,8 +665,19 @@ class StoreDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # add put, delete, etc.
-    #def post(self,request, location, *args, **kwargs):
-
+    def put(self,request, location, *args, **kwargs):
+        location = Store.objects.get(location=location)
+        if not location:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        data = {
+            'location' : request.data.get('location'), 
+            'owner' : request.data.get('owner'), 
+        }
+        serializer = StoreSerializer(instance=location,data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self,request,location, *args, **kwargs):
         location = Store.objects.get(location=location)
