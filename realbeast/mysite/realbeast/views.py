@@ -420,6 +420,11 @@ class UserAPIView(APIView):
         usr = self.get_user(request.user.id)
         if not usr:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if usr.username == 'admin':
+            return Response(
+            {"res": "Deleting the admin is forbidden!"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
         usr.delete()
         return Response(
             {"res": "Object deleted!"},
@@ -740,6 +745,12 @@ class StoreDetail(APIView):
         location = Store.objects.get(location=location)
         if not location:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        if location.location == 'Online':
+            return Response(
+            {"res": "Deleting the Online store is forbidden!"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
         location.delete()
         return Response(
             {"res": "Object deleted!"},
@@ -840,6 +851,9 @@ class OrderDetailAction(APIView):
         
         if action=='cancel':
             order.delivery_status = 'Cancelled'
+            online = Store.objects.get(location='Online')
+            new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+            new_cart.save()
         elif action == 'finalize':
             now = date.today()
             now = now + timedelta(days=5)
