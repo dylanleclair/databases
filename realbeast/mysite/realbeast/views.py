@@ -158,6 +158,7 @@ def update_user_info(request, user_id):
     user.email = request.POST['email']
     user.profile.address = request.POST['address']
     user.profile.phone_number = request.POST['phone']
+    user.profile.phone_number = request.POST['card_no']
     user.save()
     return HttpResponseRedirect(reverse('realbeast:account'))
 
