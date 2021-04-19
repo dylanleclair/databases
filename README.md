@@ -40,7 +40,7 @@ If you instead want the experience from a customer's point of view, sign out of 
 
 # Our REST API :whale2:
 
-Our Postman API is also included on our github - open the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
+Our Postman API is also included on our github - import the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
 
 The documentation for everything involved with that is accessible through Postman. 
 
@@ -52,10 +52,10 @@ Try not to delete the admin user though.. This could cause some problems!
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
 - add user registration, sign in and account management pages :heavy_check_mark:
 - add store page and product view pages :heavy_check_mark:
-- added skeleton for filtering store (needs to be made functional) :arrows_counterclockwise:
-- added skeleton for updating product information (quantities, description, titles, etc) :arrows_counterclockwise:
+- added filtering on store page :heavy_check_mark:
+- added page for updating product information (quantities, description, titles, etc)  :heavy_check_mark:
 - implement Django REST to get desired API functionality (see Our REST API) :heavy_check_mark:
-
+- fixed bugs found during presentation  :heavy_check_mark:
 
 #### Notes to self (django stuff)
 

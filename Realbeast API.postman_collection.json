@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "4ad1c1f9-5ec6-417b-84db-232a57b7c19e",
 		"name": "Realbeast API",
-		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"description": "# Introduction\nThe Realbeast API allows for interaction with our systems backend - allowing inventory to be edited, new products to be added, and more. \n\n# Overview\nThings that the developers should know about\n\n# Authentication\nYou will want to use basic authentication with the following login - it should be setup in Postman if you are viewing it from there. \n\n- Username: `admin`\n- Password: `12345`\n\nThe admin cannot be deleted. \n\n# Error Codes\nBad requests are the most often - for example, when you try to access an item that does not exist, it will give you an HTTP 400 / Bad Request.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -10,21 +10,12 @@
 			"name": "Product API",
 			"item": [
 				{
-					"name": "Update a product's information",
+					"name": "Get a list of all products",
 					"request": {
-						"method": "PUT",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": \"115.00\",\r\n    \"sex\": \"U\",\r\n    \"name\": \"100 Thieves Jam Hoodie\",\r\n    \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"100t-jam.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"100 Thieves\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Hoodie\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"Red\"},\r\n{\"color\":\"Black\"}\r\n]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
+							"raw": "http://127.0.0.1:8000/api/products/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -36,10 +27,112 @@
 							"path": [
 								"api",
 								"products",
-								"<product_id>",
 								""
 							]
+						},
+						"description": "This is the fastest way to get a preview of all of the products carried across the system, returning a list of all products.\n\nThe ID is included in all get requests, so that subsequent API endpoints can be used."
+					},
+					"response": [
+						{
+							"name": "Get a list of all products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/products/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"products",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:56:54 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1430"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"price\": \"100.00\",\n        \"sex\": \"M\",\n        \"name\": \"100 Thieves 2020 Jersey\",\n        \"description\": \"Support the 100 Thieves with our all new ultrawhite jersey.\",\n        \"caption\": \"A preview of the white colourway.\",\n        \"img_name\": \"100t-white.jpg\",\n        \"brands\": [\n            {\n                \"brand\": \"100 Thieves\"\n            },\n            {\n                \"brand\": \"Off White\"\n            }\n        ],\n        \"product_types\": [\n            {\n                \"product_type\": \"Jersey\"\n            }\n        ],\n        \"colors\": [\n            {\n                \"color\": \"White\"\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"price\": \"115.00\",\n        \"sex\": \"U\",\n        \"name\": \"100 Thieves Jam Hoodie\",\n        \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\n        \"caption\": \"A preview of the sweatshirt from the front.\",\n        \"img_name\": \"100t-jam.jpg\",\n        \"brands\": [\n            {\n                \"brand\": \"100 Thieves\"\n            }\n        ],\n        \"product_types\": [\n            {\n                \"product_type\": \"Hoodie\"\n            }\n        ],\n        \"colors\": [\n            {\n                \"color\": \"Red\"\n            },\n            {\n                \"color\": \"Black\"\n            }\n        ]\n    },\n    {\n        \"id\": 3,\n        \"price\": \"115.00\",\n        \"sex\": \"U\",\n        \"name\": \"100 Thieves Camping SZN Hoodie\",\n        \"description\": \"The No Camping Collection features the most ambitious designs from 100 Thieves yet.\",\n        \"caption\": \"A preview of the sweatshirt from the back.\",\n        \"img_name\": \"100t-camp.jpg\",\n        \"brands\": [],\n        \"product_types\": [],\n        \"colors\": []\n    },\n    {\n        \"id\": 6,\n        \"price\": \"85.00\",\n        \"sex\": \"F\",\n        \"name\": \"Nike Crater Impact\",\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\n        \"caption\": \"A preview of the shoe.\",\n        \"img_name\": \"crater-impact.jpg\",\n        \"brands\": [\n            {\n                \"brand\": \"Nike\"\n            }\n        ],\n        \"product_types\": [\n            {\n                \"product_type\": \"Shoe\"\n            },\n            {\n                \"product_type\": \"Lifestyle\"\n            }\n        ],\n        \"colors\": [\n            {\n                \"color\": \"White\"\n            }\n        ]\n    }\n]"
 						}
+					]
+				},
+				{
+					"name": "Update a product's information",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": \"130.00\",\r\n    \"sex\": \"U\",\r\n    \"name\": \"100 Thieves Jam Hoodie\",\r\n    \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"100t-jam.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"100 Thieves\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Hoodie\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"Red\"},\r\n{\"color\":\"Black\"}\r\n]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"2",
+								""
+							]
+						},
+						"description": "Updates a product. Supports partial updates.\n\nUpdating a product will clear the brand, product type and color fields."
 					},
 					"response": [
 						{
@@ -88,7 +181,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\r\n        \"price\": \"85.00\",\r\n        \"sex\": \"F\",\r\n        \"name\": \"Nike Crater Impact\",\r\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n        \"caption\": \"A preview of the shoe.\",\r\n        \"img_name\": \"crater-impact.jpg\",\r\n        \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n\r\n],\r\n        \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n        \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n    }",
+							"raw": "{\r\n    \"price\": \"100.00\",\r\n    \"sex\": \"F\",\r\n    \"name\": \"Nike Crater Impact\",\r\n    \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"crater-impact.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -110,7 +203,8 @@
 								"products",
 								""
 							]
-						}
+						},
+						"description": "Allows for new products to be added. All of the product fields must be filled in for this to succeed."
 					},
 					"response": [
 						{
@@ -120,7 +214,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "    {\r\n        \"price\": \"85.00\",\r\n        \"sex\": \"F\",\r\n        \"name\": \"Nike Crater Impact\",\r\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n        \"caption\": \"A preview of the shoe.\",\r\n        \"img_name\": \"crater-impact.jpg\",\r\n        \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n\r\n],\r\n        \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n        \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n    }",
+									"raw": "{\r\n    \"id\": 6,\r\n    \"price\": \"85.00\",\r\n    \"sex\": \"F\",\r\n    \"name\": \"Nike Crater Impact\",\r\n    \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"crater-impact.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -144,6 +238,100 @@
 									]
 								}
 							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 16:24:33 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "443"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 7,\n    \"price\": \"85.00\",\n    \"sex\": \"F\",\n    \"name\": \"Nike Crater Impact\",\n    \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\n    \"caption\": \"A preview of the sweatshirt from the front.\",\n    \"img_name\": \"crater-impact.jpg\",\n    \"brands\": [\n        {\n            \"brand\": \"Nike\"\n        }\n    ],\n    \"product_types\": [\n        {\n            \"product_type\": \"Shoe\"\n        },\n        {\n            \"product_type\": \"Lifestyle\"\n        }\n    ],\n    \"colors\": [\n        {\n            \"color\": \"White\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Remove a product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/7/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"7",
+								""
+							]
+						},
+						"description": "Deletes a product from the system. All other values relying on a product are also deleted by cascading the database."
+					},
+					"response": [
+						{
+							"name": "Remove a product",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/products/4/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"products",
+										"4",
+										""
+									]
+								}
+							},
 							"_postman_previewlanguage": null,
 							"header": null,
 							"cookie": [],
@@ -152,9 +340,9 @@
 					]
 				},
 				{
-					"name": "Remove a product",
+					"name": "Get a product",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
@@ -172,24 +360,81 @@
 								"<product_id>",
 								""
 							]
-						}
+						},
+						"description": "Retrieves information about a specific product. Includes ID for convenience."
 					},
 					"response": [
 						{
-							"name": "Remove a product",
+							"name": "Get a product",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
-								"url": null
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/products/1/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"products",
+										"1",
+										""
+									]
+								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:55:31 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "348"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
 							"cookie": [],
-							"body": null
+							"body": "{\n    \"id\": 1,\n    \"price\": \"100.00\",\n    \"sex\": \"M\",\n    \"name\": \"100 Thieves 2020 Jersey\",\n    \"description\": \"Support the 100 Thieves with our all new ultrawhite jersey.\",\n    \"caption\": \"A preview of the white colourway.\",\n    \"img_name\": \"100t-white.jpg\",\n    \"brands\": [\n        {\n            \"brand\": \"100 Thieves\"\n        },\n        {\n            \"brand\": \"Off White\"\n        }\n    ],\n    \"product_types\": [\n        {\n            \"product_type\": \"Jersey\"\n        }\n    ],\n    \"colors\": [\n        {\n            \"color\": \"White\"\n        }\n    ]\n}"
 						}
 					]
 				}
-			]
+			],
+			"description": "The Product API allows products to be created, modified, added and deleted. \n\nThere are a couple examples included for you to try out!\n\nAlmost all of these rely on accessing a product through it's ID. The ID can be found by first querying the list of all products (see examples). The product with the corresponding ID must exist for you to use it.\n\nNote that the image for each product must already exist in the server folder - the example included already has an image, so no need to worry.\n\nEach product has all of the following attributes:\n\n- `id`: the primary key of a product\n- `price`:  the price of a product\n- `sex`: the sex the product is defined for- should be \"M\" for male, \"F\" for female and \"U\" for unisex\n- `name`: the name of a product\n- `description`: the description of a product\n- `caption`: the caption of a product, displayed with it's image on the product page\n- `img-name`: the name of the image of the product\n- `brands`: a list of brands associated with the product \n    - each brand only contain a \"brand\" field, which can have any value. \n- `product_types`: a list of the product types (shorts, shoes, pants, etc.)\n    - each product_type only contain a \"product_type\" field, which can have any value. \n- `colors`: a list of the colors of a product\n    - each color only contain a \"color\" field, which can have any value."
 		},
 		{
 			"name": "User API",
@@ -200,8 +445,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
-						}
+							"raw": "http://127.0.0.1:8000/api/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"user",
+								""
+							]
+						},
+						"description": "This is the first look at the User API, and provides a glance at how users are represented by the API. \n\n-`username`: the primary key of a user (cannot be updated by PUT) \n-  `first_name`: the first name of a user\n-  `last_name`: the first name of a user\n-  `email`: the first name of a user\n-  `profile`: the first name of a user (one-to-one relationship with user)\n    - `total_rewards`: the rewards points a user has \n    - `user_type`: the type of user (\"Customer\", \"Staff\", or \"Owner\")\n    - `address`: the address of user\n    - `phone_number`: the phone number of user\n    - `card_no`: the card_no of user\n  \nThe POST request requires some additional attributes to be filled in. See it's documentation for more details"
 					},
 					"response": [
 						{
@@ -279,7 +538,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"FirstName\",\r\n    \"last_name\": \"LastName\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 10,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \" 1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"Sample\",\r\n    \"last_name\": \"Administrator\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 60,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \"1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -302,7 +561,7 @@
 								""
 							]
 						},
-						"description": "This will update the logged in User. Since this Postman documentation has the logged in admin user, any changes will be reflected in the above request: 'Get a user'."
+						"description": "This will update the logged in User. Since this Postman documentation has the logged in admin user, any changes will be reflected in the above request: 'Get a user'.\n\nThis allows you to partially update the features of a user."
 					},
 					"response": [
 						{
@@ -357,7 +616,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"dylan12\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"username\": \"dylanleclair\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -379,7 +638,8 @@
 								"user",
 								""
 							]
-						}
+						},
+						"description": "This request is used to create a new user, and can be performed by any authenticated user. \n\nThe fields for this are a bit different - all must be filled in, with the additional :\n\n- `is_staff`: a boolean attribute, determines whether the user is a staff member or not\n- `password`: the password the user will use to log in"
 					},
 					"response": [
 						{
@@ -389,7 +649,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"dylanl\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"username\": \"dylanleclair\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -455,13 +715,28 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"username\": \"dylanl\",\n    \"first_name\": \"Dylan\",\n    \"last_name\": \"Leclair\",\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\n    \"profile\": {\n        \"total_rewards\": 0,\n        \"user_type\": \"Customer\",\n        \"address\": \"123 Trent St., Calgary AB\",\n        \"phone_number\": \"403 123 4567\",\n        \"card_no\": \"1111 1111 1111 1111\"\n    }\n}"
+							"body": ""
 						}
 					]
 				},
 				{
 					"name": "Delete a user",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "dylanl",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "12345",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -479,7 +754,8 @@
 								"user",
 								""
 							]
-						}
+						},
+						"description": "This will delete the user sending the request! Note that deleting the admin is forbidden, and you may receive this as the output of the request, unless you change the user logged in through Postman."
 					},
 					"response": [
 						{
@@ -550,19 +826,2075 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "The User API has a safe-access approach: the logged in user (all API accesses require authentication) can only modify, retrieve and delete their own user.\n\nUsers can be created at any time, however with the user POST endpoint (see examples)."
 		},
 		{
 			"name": "Order API",
-			"item": []
+			"item": [
+				{
+					"name": "Get the logged in user's orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								""
+							]
+						},
+						"description": "Returns a list of the orders belonging to the logged in user."
+					},
+					"response": [
+						{
+							"name": "Get the logged in user's orders",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:28:23 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "817"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 2,\n        \"username\": \"admin\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Shipped\",\n        \"contains\": [\n            {\n                \"id\": 5,\n                \"product_id\": 2,\n                \"quantity\": 1,\n                \"size\": \"M\"\n            }\n        ],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-13T19:19:46.027963-07:00\",\n        \"delivery_date\": \"2021-04-18\",\n        \"is_restock\": false\n    },\n    {\n        \"id\": 3,\n        \"username\": \"admin\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Cart\",\n        \"contains\": [\n            {\n                \"id\": 7,\n                \"product_id\": 2,\n                \"quantity\": 1,\n                \"size\": \"L\"\n            },\n            {\n                \"id\": 9,\n                \"product_id\": 6,\n                \"quantity\": 1,\n                \"size\": \"6.5\"\n            }\n        ],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-13T21:24:47.453207-07:00\",\n        \"delivery_date\": \"2021-04-13\",\n        \"is_restock\": false\n    },\n    {\n        \"id\": 4,\n        \"username\": \"admin\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Cart\",\n        \"contains\": [],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-13T21:26:42.298778-07:00\",\n        \"delivery_date\": \"2021-04-13\",\n        \"is_restock\": false\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get a list of all orders (all users)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/all-orders/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"all-orders",
+								""
+							]
+						},
+						"description": "Retrieves a list of all orders, system-wide."
+					},
+					"response": [
+						{
+							"name": "Get a list of all orders (all users)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/all-orders/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"all-orders",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:30:54 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1041"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 2,\n        \"username\": \"admin\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Shipped\",\n        \"contains\": [\n            {\n                \"id\": 5,\n                \"product_id\": 2,\n                \"quantity\": 1,\n                \"size\": \"M\"\n            }\n        ],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-13T19:19:46.027963-07:00\",\n        \"delivery_date\": \"2021-04-18\",\n        \"is_restock\": false\n    },\n    {\n        \"id\": 3,\n        \"username\": \"admin\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Cart\",\n        \"contains\": [\n            {\n                \"id\": 7,\n                \"product_id\": 2,\n                \"quantity\": 1,\n                \"size\": \"L\"\n            },\n            {\n                \"id\": 9,\n                \"product_id\": 6,\n                \"quantity\": 1,\n                \"size\": \"6.5\"\n            }\n        ],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-13T21:24:47.453207-07:00\",\n        \"delivery_date\": \"2021-04-13\",\n        \"is_restock\": false\n    },\n    {\n        \"id\": 4,\n        \"username\": \"admin\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Cart\",\n        \"contains\": [],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-13T21:26:42.298778-07:00\",\n        \"delivery_date\": \"2021-04-13\",\n        \"is_restock\": false\n    },\n    {\n        \"id\": 6,\n        \"username\": \"dylanl\",\n        \"location\": \"Online\",\n        \"delivery_status\": \"Cart\",\n        \"contains\": [],\n        \"rewards_earned\": 0,\n        \"total_price\": \"0.00\",\n        \"order_date\": \"2021-04-14T20:48:40.958535-07:00\",\n        \"delivery_date\": \"2021-04-14\",\n        \"is_restock\": false\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "View a specific order (by id)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/<order_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								""
+							]
+						},
+						"description": "Used to access a particular order using it's ID (ID is specified in all gets)."
+					},
+					"response": [
+						{
+							"name": "View a specific order (by id)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"3",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:32:00 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "319"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"username\": \"admin\",\n    \"location\": \"Online\",\n    \"delivery_status\": \"Cart\",\n    \"contains\": [\n        {\n            \"id\": 7,\n            \"product_id\": 2,\n            \"quantity\": 1,\n            \"size\": \"L\"\n        },\n        {\n            \"id\": 9,\n            \"product_id\": 6,\n            \"quantity\": 1,\n            \"size\": \"6.5\"\n        }\n    ],\n    \"rewards_earned\": 0,\n    \"total_price\": \"0.00\",\n    \"order_date\": \"2021-04-13T21:24:47.453207-07:00\",\n    \"delivery_date\": \"2021-04-13\",\n    \"is_restock\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Cancel an order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/orders/<order_id>/cancel",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								"cancel"
+							]
+						},
+						"description": "Used to cancel an order, marking it as cancelled. If this is a users cart, then a new cart is made for the user."
+					},
+					"response": [
+						{
+							"name": "Cancel an order",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:8000/api/orders/3/cancel/",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"3",
+										"cancel",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:33:23 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "324"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"username\": \"admin\",\n    \"location\": \"Online\",\n    \"delivery_status\": \"Cancelled\",\n    \"contains\": [\n        {\n            \"id\": 7,\n            \"product_id\": 2,\n            \"quantity\": 1,\n            \"size\": \"L\"\n        },\n        {\n            \"id\": 9,\n            \"product_id\": 6,\n            \"quantity\": 1,\n            \"size\": \"6.5\"\n        }\n    ],\n    \"rewards_earned\": 0,\n    \"total_price\": \"0.00\",\n    \"order_date\": \"2021-04-13T21:24:47.453207-07:00\",\n    \"delivery_date\": \"2021-04-13\",\n    \"is_restock\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Finalize (ship) an order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/orders/<order_id>/finalize",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								"finalize"
+							]
+						},
+						"description": "Finalizes an order - used to transform a cart into an order ready to be delivered. \n\nOnly valid if enough of the desired quantity is in stock (if not a restock order) - if invalid, a bad request is returned.\n\nIf the order is a cart, then a new cart is made for the user placing the order.\n\nCurrently uses a fixed delivery date."
+					},
+					"response": [
+						{
+							"name": "Finalize (ship) an order",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "127.0.0.1:8000/api/orders/4/finalize",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"4",
+										"finalize"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:39:15 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "273"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"username\": \"admin\",\n    \"location\": \"Online\",\n    \"delivery_status\": \"Shipped\",\n    \"contains\": [\n        {\n            \"id\": 12,\n            \"product_id\": 2,\n            \"quantity\": 1,\n            \"size\": \"M\"\n        }\n    ],\n    \"rewards_earned\": 0,\n    \"total_price\": \"0.00\",\n    \"order_date\": \"2021-04-13T21:26:42.298778-07:00\",\n    \"delivery_date\": \"2021-04-20\",\n    \"is_restock\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete an order (clear it's contents)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/<order_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								""
+							]
+						},
+						"description": "Deletes an order from the system. \n\nIf the order is a cart, it will simply clear all of the items from the cart."
+					},
+					"response": [
+						{
+							"name": "Clear a cart",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/4/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"4",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:36:32 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "23"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"res\": \"Cart cleared!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Add an item to an order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": 2,\r\n    \"quantity\": 3,\r\n    \"size\": \"M\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/<order_id>/contains/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								"contains",
+								""
+							]
+						},
+						"description": "Adds an item to an order. Requires product_id, size and quantity."
+					},
+					"response": [
+						{
+							"name": "Add an item to an order",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\": 2,\r\n    \"quantity\": 3,\r\n    \"size\": \"M\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/7/contains/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"7",
+										"contains",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:45:15 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "48"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 13,\n    \"product_id\": 2,\n    \"quantity\": 3,\n    \"size\": \"M\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get a specific item in a specific order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/<order_id>/contains/<contains_id>",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								"contains",
+								"<contains_id>"
+							]
+						},
+						"description": "Retrieves a specific product entry in an order using the id of the contains entry (shown in GET/POST of Order)."
+					},
+					"response": [
+						{
+							"name": "An example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/7/contains/13",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"7",
+										"contains",
+										"13"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:47:37 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "48"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 13,\n    \"product_id\": 2,\n    \"quantity\": 3,\n    \"size\": \"M\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Modify a specific item in a specific order",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 13,\r\n    \"product_id\": 2,\r\n    \"quantity\": 5,\r\n    \"size\": \"L\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/orders/<order_id>/contains/<contains_id>",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"orders",
+								"<order_id>",
+								"contains",
+								"<contains_id>"
+							]
+						},
+						"description": "Allows size / quantity to be edited for a specific contains entry (accessed by contains ID, shown in POST/GET request of order)."
+					},
+					"response": [
+						{
+							"name": "Modify a specific item in a specific order",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 13,\r\n    \"product_id\": 2,\r\n    \"quantity\": 5,\r\n    \"size\": \"L\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/orders/7/contains/13",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"orders",
+										"7",
+										"contains",
+										"13"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 14:49:19 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "48"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 13,\n    \"product_id\": 2,\n    \"quantity\": 5,\n    \"size\": \"L\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Provides access to orders in the system. \n\nEach order has the following attributes:\n\n- `id`: the id of the order (primary key)\n- `username`: the username of the user who this order belongs to \n- `location`: the store the order is from / for\n- `delivery_status`: the delivery status of the order\n- `contains`: a list of simplified product entries\n    - each entry contains: \n    - product_id of the product being ordered: \n    - the quantity of the product being ordered:\n    - each entry contains: the size of the product being ordered.  \n- `rewards_earned`: the rewards earned by this order\n- `total_price`: the total price of the order\n- `order_date`: the date the order was placed (not meaningful for carts)\n- `delivery_date`: the date the order is expected to be delivered (not meaningful for carts)\n- `is_restock`: specifies if this is a product restock order (placed by staff/owners for stores)"
 		},
 		{
 			"name": "Store API",
-			"item": []
+			"item": [
+				{
+					"name": "Retreive a list of stores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Retreive a list of stores",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 03:50:00 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "233"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"location\": \"Market Mall\",\n        \"owner\": \"admin\"\n    },\n    {\n        \"location\": \"Downtown\",\n        \"owner\": \"admin\"\n    },\n    {\n        \"location\": \"Chinook\",\n        \"owner\": \"admin\"\n    },\n    {\n        \"location\": \"Online\",\n        \"owner\": \"dylanl\"\n    },\n    {\n        \"location\": \"Cats\",\n        \"owner\": \"admin\"\n    },\n    {\n        \"location\": \"Wow\",\n        \"owner\": \"admin\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Add a new store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"location\": \"Cedar Valley\",\r\n        \"owner\": \"admin\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								""
+							]
+						},
+						"description": "Allows for new stores to be created. The owner must exist as a user in the system."
+					},
+					"response": [
+						{
+							"name": "Add a new store",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "    {\r\n        \"location\": \"Cedar Valley\",\r\n        \"owner\": \"admin\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 03:51:08 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Cedar Valley\",\n    \"owner\": \"admin\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete a store",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/<location>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								"<location>",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete a store",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/Cats",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										"Cats"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"res\": \"Object deleted!\"\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Update a store (change the owner)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"location\": \"location\",\r\n    \"owner\": \"new_owner\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/<location>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								"<location>",
+								""
+							]
+						},
+						"description": "Allows for the owner of a store to be updated, by location name."
+					},
+					"response": [
+						{
+							"name": "Update a store (change the owner)",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"location\": \"Cedar Valley\",\r\n    \"owner\": \"dylanl\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/Cedar%20Valley/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										"Cedar%20Valley",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 03:57:48 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "44"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Cedar Valley\",\n    \"owner\": \"dylanl\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Retreive a specific store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/<location>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								"<location>",
+								""
+							]
+						},
+						"description": "Gets information of a specific store, using the specified location name."
+					},
+					"response": [
+						{
+							"name": "Retreive a specific store",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/Market%20Mall/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										"Market%20Mall",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 19 Apr 2021 02:44:38 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "42"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Market Mall\",\n    \"owner\": \"admin\"\n}"
+						}
+					]
+				}
+			],
+			"description": "The Store API provides access to the different stores associated with the Realbeast Shop. \n\nEach store has the following related information: \n- `location`: the location of each store\n- `owner`: the username of the store's owner\n\nSupport basic CRUD operations."
 		},
 		{
 			"name": "Inventory API",
-			"item": []
+			"item": [
+				{
+					"name": "Get all inventory (across all stores)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								""
+							]
+						},
+						"description": "Gets the inventory of each product across all stores and sizes."
+					},
+					"response": [
+						{
+							"name": "Get all inventory (across all stores)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 03:58:43 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "325"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"location\": \"Market Mall\",\n        \"product_id\": 1,\n        \"size\": \"S\",\n        \"quantity\": 10\n    },\n    {\n        \"location\": \"Market Mall\",\n        \"product_id\": 1,\n        \"size\": \"M\",\n        \"quantity\": 8\n    },\n    {\n        \"location\": \"Market Mall\",\n        \"product_id\": 1,\n        \"size\": \"L\",\n        \"quantity\": 11\n    },\n    {\n        \"location\": \"Online\",\n        \"product_id\": 2,\n        \"size\": \"L\",\n        \"quantity\": 14\n    },\n    {\n        \"location\": \"Online\",\n        \"product_id\": 2,\n        \"size\": \"M\",\n        \"quantity\": 10\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get inventory at a specifc store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/<location>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								"<location>",
+								""
+							]
+						},
+						"description": "Gets a list of all of the inventory objects at a particular location."
+					},
+					"response": [
+						{
+							"name": "Get inventory at a specifc store",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/<location>/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										"<location>",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 03:59:21 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "125"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"location\": \"Online\",\n        \"product_id\": 2,\n        \"size\": \"L\",\n        \"quantity\": 14\n    },\n    {\n        \"location\": \"Online\",\n        \"product_id\": 2,\n        \"size\": \"M\",\n        \"quantity\": 10\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get specific product inventory for a specified store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/<location>/<product_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								"<location>",
+								"<product_id>",
+								""
+							]
+						},
+						"description": "Even more specific than the last, this returns a list of inventory entries for a specific product at a particular store to be accessed."
+					},
+					"response": [
+						{
+							"name": "Get specific product inventory for a specified store",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/Online/2/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										"Online",
+										"2",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 04:01:25 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "125"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"location\": \"Online\",\n        \"product_id\": 2,\n        \"size\": \"L\",\n        \"quantity\": 14\n    },\n    {\n        \"location\": \"Online\",\n        \"product_id\": 2,\n        \"size\": \"M\",\n        \"quantity\": 10\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Add a size for a given product at a given store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"location\": \"<location>\",\r\n        \"product_id\": \"<product_id>\",\r\n        \"size\": \"6.5\",\r\n        \"quantity\": 42\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/<location>/<product_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								"<location>",
+								"<product_id>",
+								""
+							]
+						},
+						"description": "Used to add inventory of a specific product to the system. \nAll fields detailed in the inventory API are required."
+					},
+					"response": [
+						{
+							"name": "Add some Nikes",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "    {\r\n        \"location\": \"Online\",\r\n        \"product_id\": 6,\r\n        \"size\": \"6.5\",\r\n        \"quantity\": 50\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/Online/2/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										"Online",
+										"2",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 04:03:26 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Online\",\n    \"product_id\": 6,\n    \"size\": \"6.5\",\n    \"quantity\": 50\n}"
+						}
+					]
+				},
+				{
+					"name": "Specific size information",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/<location>/<product_id>/<size>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								"<location>",
+								"<product_id>",
+								"<size>",
+								""
+							]
+						},
+						"description": "The most specific GET request of this portion of our API, allows a particular size of a particular product at a particular store to be retrieved."
+					},
+					"response": [
+						{
+							"name": "Specific size information",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/Online/6/6.5/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										"Online",
+										"6",
+										"6.5",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 04:12:55 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Online\",\n    \"product_id\": 6,\n    \"size\": \"6.5\",\n    \"quantity\": 42\n}"
+						}
+					]
+				},
+				{
+					"name": "Update a product's sizing at a particular location and size",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"location\": \"Online\",\r\n    \"product_id\": 6,\r\n    \"size\": \"6.5\",\r\n    \"quantity\": 40\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/<location>/<product_id>/<size>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								"<location>",
+								"<product_id>",
+								"<size>",
+								""
+							]
+						},
+						"description": "Allows a particular size of a particular product at a particular store to be retrieved. See the example. \n\nThe store and location must exist (used to access it). \n\nSupports partial updates."
+					},
+					"response": [
+						{
+							"name": "Alter quantity",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"location\": \"Online\",\r\n    \"product_id\": 6,\r\n    \"size\": \"6.5\",\r\n    \"quantity\": 40\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/Online/6/6.5/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										"Online",
+										"6",
+										"6.5",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 04:06:32 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "63"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Online\",\n    \"product_id\": 6,\n    \"size\": \"6.5\",\n    \"quantity\": 40\n}"
+						}
+					]
+				},
+				{
+					"name": "Remove a product size from a store's inventory",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/sizes/<location>/<product_id>/<size>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"sizes",
+								"<location>",
+								"<product_id>",
+								"<size>",
+								""
+							]
+						},
+						"description": "Removes an inventory entry, using the size, location and product."
+					},
+					"response": [
+						{
+							"name": "Remove a product size from a store's inventory",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/sizes/Online/6/6.5/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"sizes",
+										"Online",
+										"6",
+										"6.5",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 04:10:35 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "25"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"res\": \"Object deleted!\"\n}"
+						}
+					]
+				}
+			],
+			"description": "The inventory API is one of the fundamental aspects of our API. This allows different stores inventory levels to be managed and updated. The location, product_id and size make up the primary key. \n\nEach inventory object contains:\n\n- `location`: the store associated with this inventory entry\n- `product_id`: the related product id\n- `size`: the size of the inventory entry\n- `quantity`: the quantity of the inventory entry"
 		}
 	],
 	"auth": {
