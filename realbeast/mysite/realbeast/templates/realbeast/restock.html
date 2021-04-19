@@ -1,6 +1,6 @@
 {% extends 'realbeast/base.html' %}
 
-{% block title %}Realbeast - Sign in{% endblock %}
+{% block title %}Restock{% endblock %}
 
 
 <!-- Page specific style for inherited elements-->
@@ -152,22 +152,22 @@
         {% csrf_token %}
         <select name="merch" id="merch">
             {% for product in products %}
-            <option value="{{product}}">{{product.prod.name}}</option>
+            <option value="{{product.prod.id}}">{{product.prod.name}}</option>
             {% endfor %}
         </select>
 
         <select name="Location" id="location">
             {% for store in stores %}
-            <option value="{{store.location}}">{{store.location}}</option>
+            <option value="{{store}}">{{store.location}}</option>
             {% endfor %}
         </select>
 
         <label for="small">Small</label>
-        <input type="radio" name="sizeSelect" id="small" value="s" checked>
+        <input type="radio" name="sizeSelect" id="small" value="S" checked>
         <label for="medium">Medium</label>
-        <input type="radio" name="sizeSelect" id="medium" value="m">
+        <input type="radio" name="sizeSelect" id="medium" value="M">
         <label for="large">Large</label>
-        <input type="radio" name="sizeSelect" id="large" value="l">
+        <input type="radio" name="sizeSelect" id="large" value="L">
 
         <select name="quantities" id=quantities">
         <option value="1">1</option>

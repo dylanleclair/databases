@@ -118,20 +118,20 @@
 
       <div id="checkout-row">
         <p>Subtotal:<p>
-        <p id="price">19.99</p>
+        <p id="price">{{totalPrice}}</p>
       </div>
       
       <div id="checkout-row">
         <p>Taxes:<p>
-        <p id="price">19.99</p>
+        <p id="price">{{tax}}</p>
       </div>
       <div id="checkout-row">
         <p>Shipping:<p>
-        <p id="price">19.99</p>
+        <p id="price">{{shippingFee}}</p>
       </div>
       <div id="checkout-row">
         <p>Grand Total:<p>
-        <p id="price">19.99</p>
+        <p id="price">{{subtotal}}</p>
       </div>
   <form>
     <input type="submit" id="submit" value="Checkout">
