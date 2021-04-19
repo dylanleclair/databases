@@ -40,13 +40,11 @@ If you instead want the experience from a customer's point of view, sign out of 
 
 # Our REST API :whale2:
 
-Our Postman API is also included on our github - import the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
+Our Postman API is complete and professional, included in the root folder of this repo- import the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
 
 The documentation for everything involved with that is accessible through Postman. 
 
 All you need to do is boot up the local server as instructed above, and all of the requests in it should work flawlessly. :tada:
-
-Try not to delete the admin user though.. This could cause some problems!
 
 # To do list (web interface) :zap:
 - creating base HTML documents for pages (with navbar) that we can extend to make more pages easier :heavy_check_mark: (See realbeast/templates/base.html)
