@@ -24,7 +24,9 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('finalize/', views.finalize_order, name='finalize_order'),
     path('account/restock/',views.restock, name= 'restock'),
-    path('restock/',views.restockItems, name = 'restockItems')
+    path('restock/',views.restockItems, name = 'restockItems'),
+    path('update_stock/<int:product_id>',views.update_stock, name = 'update_stock'),
+    path('update_product/<int:product_id>',views.update_product, name = 'update_product')
 
     # this code will:
     # match a path with /realbeast/<integer> (ex: localhost:8000/realbeast/1)

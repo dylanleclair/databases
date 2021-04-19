@@ -95,9 +95,12 @@ def product_page(request, product_id):
 # the product page of a specific item
 def product_edit(request, product_id):
     # retreive the object from the database
-    product = Product.objects.filter(id=product_id)[0];
+    product = Product.objects.get(id=product_id);
     template = loader.get_template('realbeast/product-edit.html')
     sizes = Size.objects.filter(product_id=product.id)
+
+    all_stores = Store.objects.all()
+
     stores_list = [] # location, size and quantity IN STORES
     
     online_list = [] # location, size and quantity ONLINE
@@ -127,6 +130,7 @@ def product_edit(request, product_id):
         'online':available_online,
         'online_list': online_list,
         'sizes_online':sizes_online,
+        'all_stores':all_stores,
     }
     return HttpResponse(template.render(context, request));
 
@@ -182,6 +186,9 @@ def register(request):
 
     login(request,user) # log them in!
     return HttpResponseRedirect(reverse('realbeast:products'))
+
+
+
 
 def add_to_cart(request, product_id):
     if request.user.is_authenticated:
@@ -405,6 +412,42 @@ def finalize_order(request):
     new_cart.save()
     
     return HttpResponseRedirect(reverse('realbeast:products'))
+
+def update_product(request,product_id):
+    name = request.POST['name']
+    caption = request.POST['caption']
+    price = request.POST['price']
+    description = request.POST['description']
+
+    prod = Product.objects.get(pk=product_id)
+    prod.name = name
+    prod.caption = caption
+    prod.price = price
+    prod.description = description
+    prod.save()
+
+    return HttpResponseRedirect(reverse('realbeast:product_edit',args=[product_id]))
+
+
+def update_stock(request,product_id):
+    store = request.POST['store-select']
+    size = request.POST['size-select']
+    quantity = request.POST['quantity-select']
+
+    product = Product.objects.get(pk=product_id)
+    # check if exists
+    size_temp = Size.objects.filter(product_id=product,size=size, store_id=Store.objects.get(location=store))[0]
+    if size_temp:
+        # update quantity
+        if int(quantity) >= 0:
+            size_temp.quantity = quantity
+            size_temp.save()
+    else:
+        # otherwise, create
+        new = Size( product_id=product,size=size, quantity=quantity, store_id=Store.objects.get(location=store))
+        new.save()
+    return HttpResponseRedirect(reverse('realbeast:product_edit',args=[product_id]))
+
 # API VIEWS
 
 #=========================================================
