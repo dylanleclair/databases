@@ -1,6 +1,6 @@
 {% extends 'realbeast/base.html' %}
 
-{% block title %}Realbeast - {{product.name}}{% endblock %}
+{% block title %}Realbeast - Checkout{% endblock %}
 <!-- Local files-->
 {% load static %}
 
@@ -20,6 +20,14 @@
         font-size: large;
     }
 
+    ul {
+      font-family: var(--monospace);
+    }
+
+    p {
+      font-family: var(--monospace);
+    }
+
 </style>
 
 {% endblock %}
@@ -36,7 +44,8 @@
     <li>A confirmation email will be sent to your email address.</li>
     <li>You can return any products in store up to 30 days after purchase.</li>
   </ul>
-  <form>
+  <form  action="{% url 'realbeast:finalize_order' %}" method="post">
+    {% csrf_token %}
       <input type="submit" id="submit" value="Place order">
   </form>
 

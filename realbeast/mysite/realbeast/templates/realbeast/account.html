@@ -162,10 +162,6 @@
   <form class="form-group" action="{% url 'realbeast:update_user_info' user.id %}" method="post">
     {% csrf_token %}
 
-    <!-- user information inputs here -->
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" maxlength="30" value="{{user.username}}" required>
-
     <label for="username">First name</label>
     <input type="text" id="firstname" name="firstname" maxlength="30" value="{{user.first_name}}" required>
 
@@ -182,7 +178,15 @@
 
     <label for="address">Phone</label>
     <input type="text" id="phone" name="phone" maxlength="10" value="{{user.profile.phone_number}}" required>
+    
+    
+    <label for="address">Card Number</label>
+    <input type="text" id="card_no" name="card_no" maxlength="30" value="{{user.profile.card_no}}" required>
+
+    
     <input id="submit" type="submit" value="Update">
+
+
 
   </form>
 

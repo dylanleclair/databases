@@ -71,6 +71,9 @@ class Store(models.Model):
     owner_id = models.ForeignKey(User,on_delete=models.CASCADE) 
     # I removed number of employees, since this can be found by querying works at. 
 
+    def __str__(self):
+        return self.location
+
 # works at relation - for employees only
 class WorksAt(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

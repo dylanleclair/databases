@@ -133,7 +133,7 @@
         <p>Grand Total:<p>
         <p id="price">{{subtotal}}</p>
       </div>
-  <form>
+  <form action="{% url 'realbeast:checkout' %}">
     <input type="submit" id="submit" value="Checkout">
   </form>
 
