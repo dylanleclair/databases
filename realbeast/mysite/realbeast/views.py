@@ -72,13 +72,14 @@ def product_page(request, product_id):
             }
         if size.store_id.location == 'Online':
             # add online sizes
-            sizes_online.append(size.size)
-            online_list.append(size_obj)
+            if(size.quantity != 0):
+                sizes_online.append(size.size)
+                online_list.append(size_obj)
             
         else: 
             stores_list.append(size_obj)
 
-    available_online =len(online_list) > 0
+    available_online = len(online_list) > 0
     instock = len(stores_list) > 0
     context = {
         'product':product,
@@ -112,8 +113,9 @@ def product_edit(request, product_id):
             }
         if size.store_id.location == 'Online':
             # add online sizes
-            sizes_online.append(size.size)
-            online_list.append(size_obj)
+            if(size.quantity == 0):
+                sizes_online.append(size.size)
+                online_list.append(size_obj)
             
         else: 
             stores_list.append(size_obj)
@@ -191,27 +193,36 @@ def add_to_cart(request, product_id):
         user = request.user
         cart = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
         product = Product.objects.get(pk=product_id)
-        quantity = request.POST['quantity']
+
+        quantity = request.POST['quantity'] # Quantity added to cart
+
         size = request.POST.getlist('size')
         print(size)
         if not size:
             return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
         size = size[0]
-        # if the user already has item in cart, update quantity
-        item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
-        if item_set.count() > 0:
-            item = item_set[0]
-            item.quantity += 1
-            item.size = size
-            item.save()
-            #Size.objects.get(product_id=product, store_id__location='Online')
-        else:
-        # else, add new entry to the cart
-        # identify the product
-            item = Contains(order_id=cart,product_id=product,quantity=quantity,size=size)
-            item.save() # save to the database
-    
-        
+
+        # Find the quantity for that particular product size
+        online = Store.objects.get(location="Online")
+        x = Size.objects.filter(product_id = product, size = size, store_id = online)[0]
+        # Don't allow the user to add to cart if the quantity is greater than current stock
+        if int(quantity) > x.quantity:
+            return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
+        else: 
+            # if the user already has item in cart, update quantity
+            item_set = Contains.objects.filter(order_id=cart, product_id=product,size=size)
+            if item_set.count() > 0:
+                item = item_set[0]
+                item.quantity += 1
+                item.size = size
+                item.save()
+                #Size.objects.get(product_id=product, store_id__location='Online')
+            else:
+            # else, add new entry to the cart
+            # identify the product
+                item = Contains(order_id=cart,product_id=product,quantity=quantity,size=size)
+                item.save() # save to the database
+           
         return HttpResponseRedirect(reverse('realbeast:product_page', args=[product_id]))
 
 def my_login(request):
@@ -288,11 +299,15 @@ def cart(request):
     # a context that we can display usintg a table
     cart_items = []
     items = Contains.objects.filter(order_id=order.id)
+    totalPrice = 0
     for item in items:
         # give the context the product
         product = item.product_id
         # give the context the quantity
         quantity = item.quantity
+
+        # Add price for each item to total price
+        totalPrice = totalPrice + (product.price * quantity)
         cart_items.append(
             {
                 'product': product,
@@ -306,14 +321,26 @@ def cart(request):
 
     # calculate subtotal
 
-    # calculate taxes
+    # calculate taxes using Alberta tax rate
+
+    tax = float(totalPrice) * 0.05 
 
     # calculate shipping (flat rate cuz ill wanna kms otherwise)
 
+    shippingFee = 10
+    if(totalPrice == 0):
+        shippingFee = 0
+
     # grand total
+
+    subtotal = float(totalPrice) + tax + float(shippingFee)
 
     context = {
         'cart_items': cart_items,
+        'totalPrice' : totalPrice,
+        'tax' : tax,
+        'shippingFee' : shippingFee,
+        'subtotal' : subtotal,
     }
     template = loader.get_template('realbeast/cart.html')
     return HttpResponse(template.render(context, request))
@@ -351,24 +378,46 @@ def restock(request):
     return render(request, 'realbeast/restock.html', context)
 
 def restockItems(request) :
-    product = request.POST['prod']
-    location = request.POST['Location']
-    siz = request.POST.getlist['sizeSelect']
+
+    prod = request.POST['merch']
+    loc = request.POST['Location']
+    siz = request.POST['sizeSelect']
+
     quantity = request.POST['quantities']
 
-    sizes = Size.objects.filter(product_id = product).filter(size = siz)
-    if(not(sizes)):
+    x = Product.objects.filter(pk = prod)[0]
+    y = Store.objects.filter(location = loc)[0]
 
+    sizes = Size.objects.filter(product_id = prod).filter(size = siz)
+    if(not(sizes)):
+    
         temp = Size()
-        temp.product_id = product
+        temp.product_id = x
         temp.size = siz
-        temp.store_id = location.id
+        temp.store_id = y
+        temp.quantity = int(quantity)
         temp.save()
 
     else:
-        temp = sizes[0]
-        temp.quantity += quantity
-        temp.save()   
+
+        locationExists = False
+
+        for size in sizes:
+            if(size.store_id == y):
+                locationExists = True
+
+        if(locationExists):
+            temp = sizes.filter(store_id = y)[0]
+            temp.quantity += int(quantity)
+            temp.save()   
+
+        else:
+            temp = Size()
+            temp.size = siz            
+            temp.store_id = y 
+            temp.quantity = int(quantity)
+            temp.product_id = x
+            temp.save()
 
 
     return HttpResponseRedirect(reverse('realbeast:products'))
@@ -391,8 +440,28 @@ def finalize_order(request):
     print("YOLO")
     user = request.user
     order = Order.objects.filter(user_id=user.id,delivery_status='Cart')[0]
+    
+    cart_items = [] 
+
+    items = Contains.objects.filter(order_id=order.id).all()
+
+    for item in items:
+        product = item.product_id
+        size = item.size
+        quantity = item.quantity
+        cart_items.append((product,size,quantity))
+
+    for product in cart_items:
+        prod = Product.objects.filter(pk = product[0].id)[0]
+        online = Store.objects.get(location="Online")
+        item_size = Size.objects.filter(product_id = prod.id, size = product[1], store_id = online)[0]
+        quantity = product[2]
+
+        item_size.quantity -= int(quantity)
+        item_size.save()
+
     # code to finalize the order 
-    print(order)
+    
     now = date.today()
     now = now + timedelta(days=5)
     order.delivery_status = 'Shipped'
