@@ -40,7 +40,7 @@ If you instead want the experience from a customer's point of view, sign out of 
 
 # Our REST API :whale2:
 
-Our Postman API is also included on our github - open the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
+Our Postman API is also included on our github - import the `RealbeastAPI.postman_collection.json` file in Postman, and you are set! :rocket:
 
 The documentation for everything involved with that is accessible through Postman. 
 
