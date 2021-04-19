@@ -458,9 +458,11 @@ class UserAPIView(APIView):
         data = {
             'user':user,
             'profile': request.data.get('profile'),
-            'email':request.data.get('email')
+            'email':request.data.get('email'),
+            'first_name':request.data.get('first_name'),
+            'last_name':request.data.get('last_name'),
         }
-        serializer = CustomerSerializer(instance=user, data=data, partial=True)
+        serializer = CustomerSerializer(instance=user, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -494,7 +496,9 @@ class UserAPIView(APIView):
         data = {
             'user': usr,
             'profile': request.data.get('profile'),
-            'email':request.data.get('email')
+            'email':request.data.get('email'),
+            'first_name':request.data.get('first_name'),
+            'last_name':request.data.get('last_name'),
         }
         serializer = CustomerSerializer(instance=usr, data=data,partial=True )
         if serializer.is_valid():
@@ -940,19 +944,48 @@ class OrderDetailAction(APIView):
         
         if action=='cancel':
             order.delivery_status = 'Cancelled'
-            online = Store.objects.get(location='Online')
-            new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
-            new_cart.save()
+            if order.location == "Online" and order.delivery_status == "Cart":
+                online = Store.objects.get(location='Online')
+                new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+                new_cart.save()
         elif action == 'finalize':
             now = date.today()
             now = now + timedelta(days=5)
             order.delivery_status = 'Shipped'
             order.delivery_date=now
+
+            # make sure each product in order is in stock
+
+            valid = True
+            contains_set = Contains.objects.filter(order_id=order)
+            for item in contains_set:
+                quantity_location = Size.get(store_id=order.store_id, size = item.size,quantity=item.quantity)
+                if item.quantity > quantity_location:
+                    valid = False
+
+            if valid:
+                for item in contains_set:
+                    quantity_location = Size.get(store_id=order.store_id, size = item.size,quantity=item.quantity)
+                    quantity_location.quantity -= item.quantity
+
+            if not valid:
+                return Response(
+                    {"res": "Not enough quantity to fill order!"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # calculate the price?
+            user = User.objects.filter(username=order.username)
+            user.total_rewards += order.rewards_earned 
+            user.save()
+            payment = Payment(payment_type="Credit", amount=order.total_price, order_id = order)
+            payment.save()
             # verify this is possible
             # update the quantities available
-            online = Store.objects.get(location='Online')
-            new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
-            new_cart.save()
+            if order.delivery_status == "Cart":
+                online = Store.objects.get(location='Online')
+                new_cart = Order(user_id=order.user_id,store_id=online,delivery_status='Cart')
+                new_cart.save()
         
         order.save()
         serializer = OrderSerializer(order, context={'request':request})

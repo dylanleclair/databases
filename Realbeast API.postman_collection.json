@@ -14,7 +14,23 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						},
+						"description": "This is the fastest way to get a preview of all of the products carried across the system, returning a list of all products.\n\nThe ID is included in all get requests, so that subsequent API endpoints can be used."
 					},
 					"response": [
 						{
@@ -92,7 +108,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": \"115.00\",\r\n    \"sex\": \"U\",\r\n    \"name\": \"100 Thieves Jam Hoodie\",\r\n    \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"100t-jam.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"100 Thieves\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Hoodie\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"Red\"},\r\n{\"color\":\"Black\"}\r\n]\r\n}",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"price\": \"130.00\",\r\n    \"sex\": \"U\",\r\n    \"name\": \"100 Thieves Jam Hoodie\",\r\n    \"description\": \"A premium red-black tie dye, every piece has its own personality.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"100t-jam.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"100 Thieves\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Hoodie\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"Red\"},\r\n{\"color\":\"Black\"}\r\n]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -100,7 +116,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
+							"raw": "http://127.0.0.1:8000/api/products/2/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -112,10 +128,11 @@
 							"path": [
 								"api",
 								"products",
-								"<product_id>",
+								"2",
 								""
 							]
-						}
+						},
+						"description": "Updates a product. Supports partial updates.\n\nUpdating a product will clear the brand, product type and color fields."
 					},
 					"response": [
 						{
@@ -164,7 +181,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"price\": \"100.00\",\r\n    \"sex\": \"F\",\r\n    \"name\": \"Nike Crater Impact\",\r\n    \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"crater-impact.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -186,7 +203,8 @@
 								"products",
 								""
 							]
-						}
+						},
+						"description": "Allows for new products to be added. All of the product fields must be filled in for this to succeed."
 					},
 					"response": [
 						{
@@ -196,7 +214,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "    {\r\n        \"price\": \"85.00\",\r\n        \"sex\": \"F\",\r\n        \"name\": \"Nike Crater Impact\",\r\n        \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n        \"caption\": \"A preview of the shoe.\",\r\n        \"img_name\": \"crater-impact.jpg\",\r\n        \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n\r\n],\r\n        \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n        \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n    }",
+									"raw": "{\r\n    \"id\": 6,\r\n    \"price\": \"85.00\",\r\n    \"sex\": \"F\",\r\n    \"name\": \"Nike Crater Impact\",\r\n    \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\r\n    \"caption\": \"A preview of the sweatshirt from the front.\",\r\n    \"img_name\": \"crater-impact.jpg\",\r\n    \"brands\": [\r\n{\"brand\":\"Nike\"}\r\n],\r\n    \"product_types\": [\r\n{\"product_type\":\"Shoe\"},\r\n{\"product_type\":\"Lifestyle\"}\r\n],\r\n    \"colors\": [\r\n{\"color\":\"White\"}\r\n]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -220,10 +238,49 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 15 Apr 2021 16:24:33 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "443"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
 							"cookie": [],
-							"body": null
+							"body": "{\n    \"id\": 7,\n    \"price\": \"85.00\",\n    \"sex\": \"F\",\n    \"name\": \"Nike Crater Impact\",\n    \"description\": \"Unlike traditional shoe construction, the Nike Crater Impact’s thoughtful and modern design takes pattern efficiency and waste reduction seriously.\",\n    \"caption\": \"A preview of the sweatshirt from the front.\",\n    \"img_name\": \"crater-impact.jpg\",\n    \"brands\": [\n        {\n            \"brand\": \"Nike\"\n        }\n    ],\n    \"product_types\": [\n        {\n            \"product_type\": \"Shoe\"\n        },\n        {\n            \"product_type\": \"Lifestyle\"\n        }\n    ],\n    \"colors\": [\n        {\n            \"color\": \"White\"\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -233,7 +290,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
+							"raw": "http://127.0.0.1:8000/api/products/7/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -245,10 +302,11 @@
 							"path": [
 								"api",
 								"products",
-								"<product_id>",
+								"7",
 								""
 							]
-						}
+						},
+						"description": "Deletes a product from the system. All other values relying on a product are also deleted by cascading the database."
 					},
 					"response": [
 						{
@@ -286,7 +344,24 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/products/<product_id>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"<product_id>",
+								""
+							]
+						},
+						"description": "Retrieves information about a specific product. Includes ID for convenience."
 					},
 					"response": [
 						{
@@ -359,7 +434,7 @@
 					]
 				}
 			],
-			"description": "The Product API allows products to be created, modified, added and deleted. \n\nThere are a couple examples included for you to try out!\n\nAlmost all of these rely on accessing a product through it's ID. The ID can be found by first querying the list of all products (see examples). The product with the corresponding ID must exist for you to use it."
+			"description": "The Product API allows products to be created, modified, added and deleted. \n\nThere are a couple examples included for you to try out!\n\nAlmost all of these rely on accessing a product through it's ID. The ID can be found by first querying the list of all products (see examples). The product with the corresponding ID must exist for you to use it.\n\nNote that the image for each product must already exist in the server folder - the example included already has an image, so no need to worry.\n\nEach product has all of the following attributes:\n\n- `id`: the primary key of a product\n- `price`:  the price of a product\n- `sex`: the sex the product is defined for- should be \"M\" for male, \"F\" for female and \"U\" for unisex\n- `name`: the name of a product\n- `description`: the description of a product\n- `caption`: the caption of a product, displayed with it's image on the product page\n- `img-name`: the name of the image of the product\n- `brands`: a list of brands associated with the product \n    - each brand only contain a \"brand\" field, which can have any value. \n- `product_types`: a list of the product types (shorts, shoes, pants, etc.)\n    - each product_type only contain a \"product_type\" field, which can have any value. \n- `colors`: a list of the colors of a product\n    - each color only contain a \"color\" field, which can have any value."
 		},
 		{
 			"name": "User API",
@@ -384,7 +459,8 @@
 								"user",
 								""
 							]
-						}
+						},
+						"description": "This is the first look at the User API, and provides a glance at how users are represented by the API. \n\n-`username`: the primary key of a user (cannot be updated by PUT) \n-  `first_name`: the first name of a user\n-  `last_name`: the first name of a user\n-  `email`: the first name of a user\n-  `profile`: the first name of a user (one-to-one relationship with user)\n    - `total_rewards`: the rewards points a user has \n    - `user_type`: the type of user (\"Customer\", \"Staff\", or \"Owner\")\n    - `address`: the address of user\n    - `phone_number`: the phone number of user\n    - `card_no`: the card_no of user\n  \nThe POST request requires some additional attributes to be filled in. See it's documentation for more details"
 					},
 					"response": [
 						{
@@ -462,7 +538,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"FirstName\",\r\n    \"last_name\": \"LastName\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 10,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \" 1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"first_name\": \"Sample\",\r\n    \"last_name\": \"Administrator\",\r\n    \"email\": \"sample@realbeast.ca\",\r\n    \"profile\": {\r\n        \"total_rewards\": 60,\r\n        \"user_type\": \"Staff\",\r\n        \"address\": \"1 University Drive, Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -485,7 +561,7 @@
 								""
 							]
 						},
-						"description": "This will update the logged in User. Since this Postman documentation has the logged in admin user, any changes will be reflected in the above request: 'Get a user'."
+						"description": "This will update the logged in User. Since this Postman documentation has the logged in admin user, any changes will be reflected in the above request: 'Get a user'.\n\nThis allows you to partially update the features of a user."
 					},
 					"response": [
 						{
@@ -540,7 +616,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"dylanl\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+							"raw": "{\r\n    \"username\": \"dylanleclair\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -562,7 +638,8 @@
 								"user",
 								""
 							]
-						}
+						},
+						"description": "This request is used to create a new user, and can be performed by any authenticated user. \n\nThe fields for this are a bit different - all must be filled in, with the additional :\n\n- `is_staff`: a boolean attribute, determines whether the user is a staff member or not\n- `password`: the password the user will use to log in"
 					},
 					"response": [
 						{
@@ -572,7 +649,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"dylanl\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
+									"raw": "{\r\n    \"username\": \"dylanleclair\",\r\n    \"password\": \"12345\",\r\n    \"first_name\": \"Dylan\",\r\n    \"last_name\": \"Leclair\",\r\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\r\n    \"is_staff\":\"False\",\r\n    \"profile\": {\r\n        \"total_rewards\": 0,\r\n        \"user_type\": \"Customer\",\r\n        \"address\": \"123 Trent St., Calgary AB\",\r\n        \"phone_number\": \"403 123 4567\",\r\n        \"card_no\": \"1111 1111 1111 1111\"\r\n    }\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -638,7 +715,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"username\": \"dylanl\",\n    \"first_name\": \"Dylan\",\n    \"last_name\": \"Leclair\",\n    \"email\": \"dylan.leclair1@ucalgary.ca\",\n    \"profile\": {\n        \"total_rewards\": 0,\n        \"user_type\": \"Customer\",\n        \"address\": \"123 Trent St., Calgary AB\",\n        \"phone_number\": \"403 123 4567\",\n        \"card_no\": \"1111 1111 1111 1111\"\n    }\n}"
+							"body": ""
 						}
 					]
 				},
@@ -677,7 +754,8 @@
 								"user",
 								""
 							]
-						}
+						},
+						"description": "This will delete the user sending the request! Note that deleting the admin is forbidden, and you may receive this as the output of the request, unless you change the user logged in through Postman."
 					},
 					"response": [
 						{
@@ -774,7 +852,8 @@
 								"orders",
 								""
 							]
-						}
+						},
+						"description": "Returns a list of the orders belonging to the logged in user."
 					},
 					"response": [
 						{
@@ -865,7 +944,8 @@
 								"all-orders",
 								""
 							]
-						}
+						},
+						"description": "Retrieves a list of all orders, system-wide."
 					},
 					"response": [
 						{
@@ -957,7 +1037,8 @@
 								"<order_id>",
 								""
 							]
-						}
+						},
+						"description": "Used to access a particular order using it's ID (ID is specified in all gets)."
 					},
 					"response": [
 						{
@@ -1049,7 +1130,8 @@
 								"<order_id>",
 								"cancel"
 							]
-						}
+						},
+						"description": "Used to cancel an order, marking it as cancelled. If this is a users cart, then a new cart is made for the user."
 					},
 					"response": [
 						{
@@ -1141,7 +1223,8 @@
 								"<order_id>",
 								"finalize"
 							]
-						}
+						},
+						"description": "Finalizes an order - used to transform a cart into an order ready to be delivered. \n\nOnly valid if enough of the desired quantity is in stock (if not a restock order) - if invalid, a bad request is returned.\n\nIf the order is a cart, then a new cart is made for the user placing the order.\n\nCurrently uses a fixed delivery date."
 					},
 					"response": [
 						{
@@ -1233,7 +1316,8 @@
 								"<order_id>",
 								""
 							]
-						}
+						},
+						"description": "Deletes an order from the system. \n\nIf the order is a cart, it will simply clear all of the items from the cart."
 					},
 					"response": [
 						{
@@ -1336,7 +1420,8 @@
 								"contains",
 								""
 							]
-						}
+						},
+						"description": "Adds an item to an order. Requires product_id, size and quantity."
 					},
 					"response": [
 						{
@@ -1440,11 +1525,12 @@
 								"contains",
 								"<contains_id>"
 							]
-						}
+						},
+						"description": "Retrieves a specific product entry in an order using the id of the contains entry (shown in GET/POST of Order)."
 					},
 					"response": [
 						{
-							"name": "New Request",
+							"name": "An example",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
@@ -1544,7 +1630,8 @@
 								"contains",
 								"<contains_id>"
 							]
-						}
+						},
+						"description": "Allows size / quantity to be edited for a specific contains entry (accessed by contains ID, shown in POST/GET request of order)."
 					},
 					"response": [
 						{
@@ -1626,7 +1713,8 @@
 						}
 					]
 				}
-			]
+			],
+			"description": "Provides access to orders in the system. \n\nEach order has the following attributes:\n\n- `id`: the id of the order (primary key)\n- `username`: the username of the user who this order belongs to \n- `location`: the store the order is from / for\n- `delivery_status`: the delivery status of the order\n- `contains`: a list of simplified product entries\n    - each entry contains: \n    - product_id of the product being ordered: \n    - the quantity of the product being ordered:\n    - each entry contains: the size of the product being ordered.  \n- `rewards_earned`: the rewards earned by this order\n- `total_price`: the total price of the order\n- `order_date`: the date the order was placed (not meaningful for carts)\n- `delivery_date`: the date the order is expected to be delivered (not meaningful for carts)\n- `is_restock`: specifies if this is a product restock order (placed by staff/owners for stores)"
 		},
 		{
 			"name": "Store API",
@@ -1751,7 +1839,8 @@
 								"stores",
 								""
 							]
-						}
+						},
+						"description": "Allows for new stores to be created. The owner must exist as a user in the system."
 					},
 					"response": [
 						{
@@ -1914,7 +2003,8 @@
 								"<location>",
 								""
 							]
-						}
+						},
+						"description": "Allows for the owner of a store to be updated, by location name."
 					},
 					"response": [
 						{
@@ -1994,9 +2084,103 @@
 							"body": "{\n    \"location\": \"Cedar Valley\",\n    \"owner\": \"dylanl\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Retreive a specific store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/stores/<location>/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"stores",
+								"<location>",
+								""
+							]
+						},
+						"description": "Gets information of a specific store, using the specified location name."
+					},
+					"response": [
+						{
+							"name": "Retreive a specific store",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/stores/Market%20Mall/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"stores",
+										"Market%20Mall",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 19 Apr 2021 02:44:38 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.7"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "42"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"location\": \"Market Mall\",\n    \"owner\": \"admin\"\n}"
+						}
+					]
 				}
 			],
-			"description": "The Store API provides access to the different stores associated with the Realbeast Shop. \n\nYou can create, read, modify and delete users - please see the examples for how you might do some of this."
+			"description": "The Store API provides access to the different stores associated with the Realbeast Shop. \n\nEach store has the following related information: \n- `location`: the location of each store\n- `owner`: the username of the store's owner\n\nSupport basic CRUD operations."
 		},
 		{
 			"name": "Inventory API",
@@ -2021,7 +2205,8 @@
 								"sizes",
 								""
 							]
-						}
+						},
+						"description": "Gets the inventory of each product across all stores and sizes."
 					},
 					"response": [
 						{
@@ -2113,7 +2298,8 @@
 								"<location>",
 								""
 							]
-						}
+						},
+						"description": "Gets a list of all of the inventory objects at a particular location."
 					},
 					"response": [
 						{
@@ -2207,7 +2393,8 @@
 								"<product_id>",
 								""
 							]
-						}
+						},
+						"description": "Even more specific than the last, this returns a list of inventory entries for a specific product at a particular store to be accessed."
 					},
 					"response": [
 						{
@@ -2311,7 +2498,8 @@
 								"<product_id>",
 								""
 							]
-						}
+						},
+						"description": "Used to add inventory of a specific product to the system. \nAll fields detailed in the inventory API are required."
 					},
 					"response": [
 						{
@@ -2416,7 +2604,8 @@
 								"<size>",
 								""
 							]
-						}
+						},
+						"description": "The most specific GET request of this portion of our API, allows a particular size of a particular product at a particular store to be retrieved."
 					},
 					"response": [
 						{
@@ -2522,7 +2711,8 @@
 								"<size>",
 								""
 							]
-						}
+						},
+						"description": "Allows a particular size of a particular product at a particular store to be retrieved. See the example. \n\nThe store and location must exist (used to access it). \n\nSupports partial updates."
 					},
 					"response": [
 						{
@@ -2628,7 +2818,8 @@
 								"<size>",
 								""
 							]
-						}
+						},
+						"description": "Removes an inventory entry, using the size, location and product."
 					},
 					"response": [
 						{
@@ -2703,7 +2894,7 @@
 					]
 				}
 			],
-			"description": "The inventory API is one of the fundamentals. This allows different stores inventory levels to be managed and updated."
+			"description": "The inventory API is one of the fundamental aspects of our API. This allows different stores inventory levels to be managed and updated. The location, product_id and size make up the primary key. \n\nEach inventory object contains:\n\n- `location`: the store associated with this inventory entry\n- `product_id`: the related product id\n- `size`: the size of the inventory entry\n- `quantity`: the quantity of the inventory entry"
 		}
 	],
 	"auth": {
