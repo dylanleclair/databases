@@ -1,12 +1,14 @@
 # databases
 
-The term project for CPSC 471, the database management systems course at UofC. 
+![](images/storefront.JPG)
+
+My group's term project for CPSC 471, the database management systems course at UofC. 
 
 This project uses a SQLite database so that we can coordinate it with the repo of the project. 
 
 If you are completely new to Django / Web Dev, I would recommend following the tutorial at the Django documentation to see how it all fits together. 
 
-Otherwise, there is a vast amount of inline documentation. 
+Otherwise, there is a rather good amount of inline documentation. 
 
 # Quickstart guide :rocket:
 
@@ -55,29 +57,10 @@ All you need to do is boot up the local server as instructed above, and all of t
 - implement Django REST to get desired API functionality (see Our REST API) :heavy_check_mark:
 - fixed bugs found during presentation  :heavy_check_mark:
 
-#### Notes to self (django stuff)
 
-To change items in the database, you will first want to change the model (realbeast/models.py). 
+### References: 
 
-After making your changes, stage them with: 
-
-`python manage.py makemigrations`
-
-Then call:
-
-`python manage.py migrate`
-
-to carry the changes you made in the model into the server.
-
-#### Seeding the database
-
-This is done with fixtures. 
-
-Create a JSON file in `realbeast/fixtures` with the name of the model you want to seed data for. 
-
-For example `Products.json` is used to seed data into the Projects table. 
-
-Then call `python manage.py dumpdata realbeast.Product > ./realbeast/fixtures/Product.json` to make Django recognize it. 
-
-Then, any time you update the values in Product.json, you can move them into the database with  `python manage.py loaddata Product`
+- Icons used in the website are from Flaticon
+- 100 Thieves apparel images are copyright of 100 Thieves
+- Nike apparel images are copyright of Nike
 
